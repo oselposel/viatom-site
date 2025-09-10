@@ -8,6 +8,14 @@
 <meta content="VIATOM s.r.o. – dopravní a pozemní stavby ve Zlínském a Jihomoravském kraji." name="description"/>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
+
+  html { scroll-behavior: smooth; }
+  /* prevent sticky header from covering anchors */
+  section[id], main[id], div[id] { scroll-margin-top: 68px; }
+  /* gallery can have double bars; give it a bit more margin */
+  #galerie { scroll-margin-top: 120px; }
+
+
       body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
       details > summary { list-style: none; cursor: pointer; }
       details > summary::-webkit-details-marker { display: none; }
@@ -17,29 +25,58 @@
       #galerie:target { display:block; }
       #galerie:target ~ #home { display:none; }
     
-  /* package: hero layering + mobile focus more roller */
-  #uvod { position: relative; }
-  #uvod > .hero-media { position:absolute; inset:0; z-index:0; pointer-events:none; }
-  #uvod > .hero-media picture, #uvod > .hero-media img { width:100%; height:100%; object-fit:cover; display:block; }
-  #uvod > .decor-overlay { position:absolute; inset:0; z-index:1; pointer-events:none;
-    background: linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.30) 55%, rgba(0,0,0,0.25) 100%); opacity:1 !important; }
-  #uvod > *:not(.hero-media):not(.decor-overlay) { position:relative; z-index:2; }
-  .decor-overlay { pointer-events:none; }
-  @media (max-width: 767px) {
-    #uvod > .hero-media img { object-position: 80% center; }
-  }
+  /* gallery images */
+  .gallery-img{width:100%;height:100%;object-fit:cover;display:block;border-radius:12px}
+
+/* Gallery previews in <summary> */
+details.gallery-group > summary { display:flex; align-items:center; gap:.75rem; padding:.75rem 1rem; border-radius:.75rem; border:1px solid rgba(0,0,0,.08); background:#fff; }
+.summary-title { font-weight:600; margin-right:auto; }
+.summary-previews { display:flex; gap:.5rem; }
+.summary-previews img { width:84px; height:56px; object-fit:cover; border-radius:.5rem; border:1px solid rgba(0,0,0,.06); }
+.summary-dots { margin-left:.25rem; font-size:22px; opacity:.6; }
+details.gallery-group[open] > summary { border-bottom-left-radius:0.5rem; border-bottom-right-radius:0.5rem; border-color: rgba(0,0,0,.12); }
+
+/* --- Lightbox (zoom on click) --- */
+#galerie .grid img { cursor: zoom-in; }
+#lightbox-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.92); display: none; align-items: center; justify-content: center; z-index: 9999; }
+#lightbox-overlay.open { display: flex; }
+#lightbox-overlay img { max-width: 92vw; max-height: 92vh; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,.6); }
+#lightbox-overlay .lb-btn { position: absolute; width: 42px; height: 42px; border-radius: 9999px; background: rgba(0,0,0,.45); color: #fff;
+  border: 1px solid rgba(255,255,255,.25); display:flex; align-items:center; justify-content:center; font-size: 22px; cursor: pointer; user-select: none; }
+#lightbox-overlay .lb-close { top: 16px; right: 16px; }
+#lightbox-overlay .lb-prev { left: 16px; top: 50%; transform: translateY(-50%); }
+#lightbox-overlay .lb-next { right: 16px; top: 50%; transform: translateY(-50%); }
+@media (max-width: 640px){
+  #lightbox-overlay .lb-prev, #lightbox-overlay .lb-next { width: 36px; height: 36px; font-size: 18px; }
+}
+
+/* Reference card thumbs */
+.ref-thumbs-link{display:block;margin-top:.5rem}
+.ref-thumbs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem}
+.ref-thumbs img{width:100%;height:64px;object-fit:cover;border-radius:.5rem;border:1px solid rgba(0,0,0,.06);display:block}
+
+/* HERO layering + mobile focus more roller */
+#uvod { position: relative; }
+#uvod > .hero-media { position:absolute; inset:0; z-index:0; pointer-events:none; }
+#uvod > .hero-media picture, #uvod > .hero-media img { width:100%; height:100%; object-fit:cover; display:block; }
+#uvod > .decor-overlay { position:absolute; inset:0; z-index:1; pointer-events:none;
+  background: linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.30) 55%, rgba(0,0,0,0.25) 100%); opacity:1 !important; }
+#uvod > *:not(.hero-media):not(.decor-overlay) { position:relative; z-index:2; }
+@media (max-width: 767px) {
+  #uvod > .hero-media img { object-position: 80% center; }
+}
 </style>
 </head>
 <body class="bg-white">
 <!-- NAV (works for both views) -->
-<header class="sticky top-0 z-40 border-b bg-white/90 backdrop-blur">
+<header class="sticky top-0 z-50 border-b bg-white/90 backdrop-blur">
 <div class="mx-auto w-full max-w-6xl px-4 flex items-center justify-between h-14">
-<svg aria-label="VIATOM logo" class="h-8 w-auto" role="img" viewbox="0 0 210 97" xmlns="http://www.w3.org/2000/svg">
+<a href="#uvod" class="inline-flex items-center" aria-label="Přejít na úvod"><svg aria-label="VIATOM logo" class="h-8 w-auto" role="img" viewbox="0 0 210 97" xmlns="http://www.w3.org/2000/svg">
 <rect fill="#FF5050" height="31" width="210" x="0" y="0"></rect>
 <rect fill="#00B0F0" height="31" width="210" x="0" y="33"></rect>
 <rect fill="#D3D3D3" height="31" width="210" x="0" y="66"></rect>
 <text fill="#fff" font-size="28" style="font-weight:800;letter-spacing:2px" text-anchor="middle" x="105" y="57">VIATOM</text>
-</svg>
+</svg></a>
 <nav class="hidden md:flex items-center gap-2 text-sm">
 <a class="block px-3 py-2 rounded-md hover:bg-gray-100" href="#uvod">Úvod</a>
 <a class="block px-3 py-2 rounded-md hover:bg-gray-100" href="#sluzby">Služby</a>
@@ -63,7 +100,7 @@
 </header>
 <!-- ORDER MATTERS: galerie first, then home (for CSS sibling rule) -->
 <main class="min-h-screen" id="galerie" style="background-color:#F5F5F5">
-<header class="border-b bg-white/90 backdrop-blur">
+<header class="border-b bg-white/90 backdrop-blur shadow-sm" style="position: sticky; top: 56px; z-index: 30;">
 <div class="mx-auto w-full max-w-6xl px-4 flex items-center justify-between h-14">
 <div class="font-bold">Reference – galerie</div>
 <a class="px-4 py-1 rounded border" href="#uvod" style="color:#00B0F0;border-color:#00B0F0">Zpět na hlavní stránku</a>
@@ -71,353 +108,352 @@
 </header>
 <section class="py-12 sm:py-16">
 <div class="mx-auto w-full max-w-6xl px-4">
-<p class="text-gray-700 mb-6">Kliknutím na galerii zobrazíte náhledy. Po nahrání fotek doplníme skutečné obrázky.</p>
-<details class="rounded-2xl border bg-white p-4 mb-4" open="">
-<summary class="cursor-pointer font-semibold text-gray-900">Nezdenice – chodník</summary>
+<details class="rounded-2xl border bg-white p-4 mb-4 gallery-group" id="galerie-nezdenice">
+<summary class="cursor-pointer font-semibold text-gray-900"><span class="summary-title">Nezdenice – chodník</span><span class="summary-previews"><img alt="N1.jpg" loading="lazy" src="img/reference/nezdenice/N1.jpg"/><img alt="N2.jpg" loading="lazy" src="img/reference/nezdenice/N2.jpg"/></span><span class="summary-dots">⋯</span></summary>
 <div class="mt-4"><div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"><figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N1.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">N1.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="N1.jpg" loading="lazy" src="img/reference/nezdenice/N1.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N2.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">N2.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="N2.jpg" loading="lazy" src="img/reference/nezdenice/N2.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N3.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">N3.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="N3.jpg" loading="lazy" src="img/reference/nezdenice/N3.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N4.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">N4.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="N4.jpg" loading="lazy" src="img/reference/nezdenice/N4.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N5.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">N5.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="N5.jpg" loading="lazy" src="img/reference/nezdenice/N5.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N6.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">N6.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="N6.jpg" loading="lazy" src="img/reference/nezdenice/N6.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N7.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">N7.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="N7.jpg" loading="lazy" src="img/reference/nezdenice/N7.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N8.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">N8.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="N8.jpg" loading="lazy" src="img/reference/nezdenice/N8.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N9.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">N9.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="N9.jpg" loading="lazy" src="img/reference/nezdenice/N9.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N10.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">N10.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="N10.jpg" loading="lazy" src="img/reference/nezdenice/N10.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N11.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">N11.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="N11.jpg" loading="lazy" src="img/reference/nezdenice/N11.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N12.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">N12.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="N12.jpg" loading="lazy" src="img/reference/nezdenice/N12.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N13.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">N13.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="N13.jpg" loading="lazy" src="img/reference/nezdenice/N13.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N14.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">N14.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="N14.jpg" loading="lazy" src="img/reference/nezdenice/N14.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N15.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">N15.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="N15.jpg" loading="lazy" src="img/reference/nezdenice/N15.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure></div></div>
 </details>
-<details class="rounded-2xl border bg-white p-4 mb-4">
-<summary class="cursor-pointer font-semibold text-gray-900">Osvětimany – parkování</summary>
+<details class="rounded-2xl border bg-white p-4 mb-4 gallery-group" id="galerie-osvetimany">
+<summary class="cursor-pointer font-semibold text-gray-900"><span class="summary-title">Osvětimany – parkování</span><span class="summary-previews"><img alt="O1.jpg" loading="lazy" src="img/reference/osvetimany/O1.jpg"/><img alt="O2.jpg" loading="lazy" src="img/reference/osvetimany/O2.jpg"/></span><span class="summary-dots">⋯</span></summary>
 <div class="mt-4"><div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"><figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O1.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">O1.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="O1.jpg" loading="lazy" src="img/reference/osvetimany/O1.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O2.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">O2.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="O2.jpg" loading="lazy" src="img/reference/osvetimany/O2.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O3.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">O3.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="O3.jpg" loading="lazy" src="img/reference/osvetimany/O3.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O4.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">O4.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="O4.jpg" loading="lazy" src="img/reference/osvetimany/O4.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O5.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">O5.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="O5.jpg" loading="lazy" src="img/reference/osvetimany/O5.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O6.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">O6.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="O6.jpg" loading="lazy" src="img/reference/osvetimany/O6.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O7.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">O7.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="O7.jpg" loading="lazy" src="img/reference/osvetimany/O7.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O8.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">O8.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="O8.jpg" loading="lazy" src="img/reference/osvetimany/O8.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O9.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">O9.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="O9.jpg" loading="lazy" src="img/reference/osvetimany/O9.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O10.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">O10.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="O10.jpg" loading="lazy" src="img/reference/osvetimany/O10.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O11.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">O11.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="O11.jpg" loading="lazy" src="img/reference/osvetimany/O11.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O12.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">O12.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="O12.jpg" loading="lazy" src="img/reference/osvetimany/O12.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O13.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">O13.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="O13.jpg" loading="lazy" src="img/reference/osvetimany/O13.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O14.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">O14.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="O14.jpg" loading="lazy" src="img/reference/osvetimany/O14.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O15.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">O15.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="O15.jpg" loading="lazy" src="img/reference/osvetimany/O15.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O16.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">O16.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="O16.jpg" loading="lazy" src="img/reference/osvetimany/O16.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O17.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">O17.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="O17.jpg" loading="lazy" src="img/reference/osvetimany/O17.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure></div></div>
 </details>
-<details class="rounded-2xl border bg-white p-4 mb-4">
-<summary class="cursor-pointer font-semibold text-gray-900">Re-Use centrum – Nezdenice</summary>
+<details class="rounded-2xl border bg-white p-4 mb-4 gallery-group" id="galerie-reuse">
+<summary class="cursor-pointer font-semibold text-gray-900"><span class="summary-title">Re-Use centrum – Nezdenice</span><span class="summary-previews"><img alt="R1.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R1.jpg"/><img alt="R2.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R2.jpg"/></span><span class="summary-dots">⋯</span></summary>
 <div class="mt-4"><div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"><figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R1.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">R1.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="R1.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R1.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R2.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">R2.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="R2.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R2.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R3.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">R3.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="R3.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R3.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R4.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">R4.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="R4.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R4.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R5.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">R5.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="R5.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R5.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R6.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">R6.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="R6.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R6.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R7.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">R7.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="R7.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R7.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R8.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">R8.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="R8.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R8.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R9.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">R9.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="R9.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R9.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R10.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">R10.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="R10.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R10.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R11.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">R11.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="R11.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R11.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R12.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">R12.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="R12.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R12.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R13.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">R13.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="R13.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R13.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R14.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">R14.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="R14.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R14.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R15.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">R15.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="R15.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R15.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R16.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">R16.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="R16.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R16.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R17.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">R17.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="R17.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R17.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R18.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">R18.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="R18.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R18.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R19.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">R19.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="R19.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R19.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R20.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">R20.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="R20.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R20.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R21.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">R21.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="R21.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R21.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R22.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">R22.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="R22.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R22.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R23.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">R23.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="R23.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R23.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure></div></div>
 </details>
-<details class="rounded-2xl border bg-white p-4 mb-4">
-<summary class="cursor-pointer font-semibold text-gray-900">Břest – sběrná místa</summary>
+<details class="rounded-2xl border bg-white p-4 mb-4 gallery-group" id="galerie-brest">
+<summary class="cursor-pointer font-semibold text-gray-900"><span class="summary-title">Břest – sběrná místa</span><span class="summary-previews"><img alt="B1.jpg" loading="lazy" src="img/reference/brest/B1.jpg"/><img alt="B2.jpg" loading="lazy" src="img/reference/brest/B2.jpg"/></span><span class="summary-dots">⋯</span></summary>
 <div class="mt-4"><div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"><figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B1.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B1.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B1.jpg" loading="lazy" src="img/reference/brest/B1.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B2.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B2.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B2.jpg" loading="lazy" src="img/reference/brest/B2.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B3.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B3.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B3.jpg" loading="lazy" src="img/reference/brest/B3.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B4.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B4.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B4.jpg" loading="lazy" src="img/reference/brest/B4.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B5.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B5.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B5.jpg" loading="lazy" src="img/reference/brest/B5.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B6.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B6.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B6.jpg" loading="lazy" src="img/reference/brest/B6.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B7.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B7.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B7.jpg" loading="lazy" src="img/reference/brest/B7.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B8.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B8.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B8.jpg" loading="lazy" src="img/reference/brest/B8.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B9.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B9.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B9.jpg" loading="lazy" src="img/reference/brest/B9.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B10.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B10.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B10.jpg" loading="lazy" src="img/reference/brest/B10.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B11.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B11.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B11.jpg" loading="lazy" src="img/reference/brest/B11.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B12.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B12.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B12.jpg" loading="lazy" src="img/reference/brest/B12.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B13.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B13.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B13.jpg" loading="lazy" src="img/reference/brest/B13.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B14.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B14.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B14.jpg" loading="lazy" src="img/reference/brest/B14.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B15.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B15.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B15.jpg" loading="lazy" src="img/reference/brest/B15.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B16.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B16.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B16.jpg" loading="lazy" src="img/reference/brest/B16.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B17.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B17.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B17.jpg" loading="lazy" src="img/reference/brest/B17.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B18.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B18.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B18.jpg" loading="lazy" src="img/reference/brest/B18.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B19.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B19.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B19.jpg" loading="lazy" src="img/reference/brest/B19.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B20.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B20.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B20.jpg" loading="lazy" src="img/reference/brest/B20.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B21.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B21.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B21.jpg" loading="lazy" src="img/reference/brest/B21.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B22.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B22.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B22.jpg" loading="lazy" src="img/reference/brest/B22.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B23.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B23.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B23.jpg" loading="lazy" src="img/reference/brest/B23.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B24.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B24.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B24.jpg" loading="lazy" src="img/reference/brest/B24.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B25.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B25.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B25.jpg" loading="lazy" src="img/reference/brest/B25.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B26.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B26.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B26.jpg" loading="lazy" src="img/reference/brest/B26.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B27.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B27.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B27.jpg" loading="lazy" src="img/reference/brest/B27.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B28.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B28.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B28.jpg" loading="lazy" src="img/reference/brest/B28.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure>
 <figure class="group border rounded-xl overflow-hidden bg-white">
-<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B29.jpg</div>
-<figcaption class="p-2 text-xs text-gray-500">B29.jpg</figcaption>
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500"><img alt="B29.jpg" loading="lazy" src="img/reference/brest/B29.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"/></div>
+<figcaption class="p-2 text-xs text-gray-500"></figcaption>
 </figure></div></div>
 </details>
 </div>
@@ -435,13 +471,13 @@
 <h1 class="text-3xl sm:text-4xl font-extrabold mt-2" style="color:#00B0F0">
               Chystá vaše obec, firma, nebo soukromý investor <span class="whitespace-nowrap">realizaci stavby?</span>
 </h1>
-<p class="mt-4 leading-relaxed text-white" style="color:#fff">
+<p class="text-gray-700 mt-4 leading-relaxed text-white" style="color:#fff">
               Jsme stavební firma z Uherského Hradiště. Realizujeme dopravní a pozemní stavby v rámci Zlínského a Jihomoravského kraje.
               Tým tvoří zkušení odborníci s autorizacemi pro daný obor.
             </p>
 <div class="mt-6 flex flex-wrap gap-3">
 <a class="inline-flex items-center px-5 py-2 rounded-lg font-semibold text-white" href="#kontakt" style="background-color:#FF5050">Nezávazná konzultace</a>
-<a class="inline-flex items-center px-5 py-2 rounded-lg font-semibold border" href="#galerie" style="border-color:#00B0F0;color:#00B0F0;background-color:#fff;border-color:#fff;color:#00B0F0">Zobrazit reference</a>
+<a class="inline-flex items-center px-5 py-2 rounded-lg font-semibold border" href="#galerie" style="border-color:#00B0F0;color:#00B0F0;background-color:#fff;border-color:#fff;color:#0ea5e9">Zobrazit reference</a>
 </div>
 </div>
 <div class="rounded-2xl border bg-white p-6 shadow-sm">
@@ -486,10 +522,10 @@
 <p class="text-xs uppercase tracking-widest text-gray-500 mb-2">Ukázky realizací</p>
 <h2 class="text-2xl sm:text-3xl font-extrabold mb-6" style="color:#00B0F0">Reference</h2>
 <div class="grid md:grid-cols-2 gap-6 items-center">
-<div class="rounded-2xl border bg-white p-6"><h3 class="text-lg font-bold mb-2">Nezdenice – oprava chodníku</h3><p class="text-gray-700">Silnice II/495 – průběžná oprava chodníku podél komunikace.</p><p class="text-xs text-gray-500 mt-2">Galerie: N1.jpg … N15.jpg</p></div>
-<div class="rounded-2xl border bg-white p-6"><h3 class="text-lg font-bold mb-2">Osvětimany – parkovací stání</h3><p class="text-gray-700">Nová parkovací stání u zastávky.</p><p class="text-xs text-gray-500 mt-2">Galerie: O1.jpg … O17.jpg</p></div>
-<div class="rounded-2xl border bg-white p-6"><h3 class="text-lg font-bold mb-2">Re-Use centrum Nezdenice</h3><p class="text-gray-700">Stavební úpravy a zpevněné plochy.</p><p class="text-xs text-gray-500 mt-2">Galerie: R1.jpg … R23.jpg</p></div>
-<div class="rounded-2xl border bg-white p-6"><h3 class="text-lg font-bold mb-2">Břest – sběrná místa odpadu</h3><p class="text-gray-700">Nová sběrná stání a související úpravy.</p><p class="text-xs text-gray-500 mt-2">Galerie: B1.jpg … B29.jpg</p></div>
+<div class="rounded-2xl border bg-white p-6"><h3 class="text-lg font-bold mb-2">Nezdenice – oprava chodníku</h3><p class="text-gray-700">Silnice II/495 – průběžná oprava chodníku podél komunikace.</p><span class="sr-only">Galerie: N1.jpg … N15.jpg</span><a aria-label="Otevřít galerii – Nezdenice – oprava chodníku" class="ref-thumbs-link" href="#galerie-nezdenice"><div class="ref-thumbs"><img alt="Nezdenice – oprava chodníku – N1.jpg" loading="lazy" src="img/reference/nezdenice/N1.jpg"/><img alt="Nezdenice – oprava chodníku – N2.jpg" loading="lazy" src="img/reference/nezdenice/N2.jpg"/><img alt="Nezdenice – oprava chodníku – N3.jpg" loading="lazy" src="img/reference/nezdenice/N3.jpg"/></div></a></div>
+<div class="rounded-2xl border bg-white p-6"><h3 class="text-lg font-bold mb-2">Osvětimany – parkovací stání</h3><p class="text-gray-700">Nová parkovací stání u zastávky.</p><span class="sr-only">Galerie: O1.jpg … O17.jpg</span><a aria-label="Otevřít galerii – Osvětimany – parkovací stání" class="ref-thumbs-link" href="#galerie-osvetimany"><div class="ref-thumbs"><img alt="Osvětimany – parkovací stání – O1.jpg" loading="lazy" src="img/reference/osvetimany/O1.jpg"/><img alt="Osvětimany – parkovací stání – O2.jpg" loading="lazy" src="img/reference/osvetimany/O2.jpg"/><img alt="Osvětimany – parkovací stání – O3.jpg" loading="lazy" src="img/reference/osvetimany/O3.jpg"/></div></a></div>
+<div class="rounded-2xl border bg-white p-6"><h3 class="text-lg font-bold mb-2">Re-Use centrum Nezdenice</h3><p class="text-gray-700">Stavební úpravy a zpevněné plochy.</p><span class="sr-only">Galerie: R1.jpg … R23.jpg</span><a aria-label="Otevřít galerii – Re-Use centrum Nezdenice" class="ref-thumbs-link" href="#galerie-reuse"><div class="ref-thumbs"><img alt="Re-Use centrum Nezdenice – R1.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R1.jpg"/><img alt="Re-Use centrum Nezdenice – R2.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R2.jpg"/><img alt="Re-Use centrum Nezdenice – R3.jpg" loading="lazy" src="img/reference/reuse-nezdenice/R3.jpg"/></div></a></div>
+<div class="rounded-2xl border bg-white p-6"><h3 class="text-lg font-bold mb-2">Břest – sběrná místa odpadu</h3><p class="text-gray-700">Nová sběrná stání a související úpravy.</p><span class="sr-only">Galerie: B1.jpg … B29.jpg</span><a aria-label="Otevřít galerii – Břest – sběrná místa odpadu" class="ref-thumbs-link" href="#galerie-brest"><div class="ref-thumbs"><img alt="Břest – sběrná místa odpadu – B1.jpg" loading="lazy" src="img/reference/brest/B1.jpg"/><img alt="Břest – sběrná místa odpadu – B2.jpg" loading="lazy" src="img/reference/brest/B2.jpg"/><img alt="Břest – sběrná místa odpadu – B3.jpg" loading="lazy" src="img/reference/brest/B3.jpg"/></div></a></div>
 </div>
 <div class="mt-6">
 <a class="inline-flex items-center px-5 py-2 rounded-lg font-semibold text-white" href="#galerie" style="background-color:#00B0F0">Otevřít stránku s galeriemi</a>
@@ -523,5 +559,160 @@
       const yearEl = document.getElementById('year');
       if (yearEl) yearEl.textContent = new Date().getFullYear();
     </script>
-</body>
+<div aria-hidden="true" id="lightbox-overlay">
+<button aria-label="Zavřít" class="lb-btn lb-close">×</button>
+<button aria-label="Předchozí" class="lb-btn lb-prev">‹</button>
+<img alt="Zvětšený obrázek"/>
+<button aria-label="Další" class="lb-btn lb-next">›</button>
+</div>
+<script>
+(function(){
+  var overlay = document.getElementById('lightbox-overlay');
+  if (!overlay) return;
+  var imgEl = overlay.querySelector('img');
+  var btnClose = overlay.querySelector('.lb-close');
+  var btnPrev  = overlay.querySelector('.lb-prev');
+  var btnNext  = overlay.querySelector('.lb-next');
+  var currentGroup = [];
+  var currentIndex = -1;
+
+  function openWith(group, index){
+    if (!group || !group.length) return;
+    currentGroup = group;
+    currentIndex = index;
+    imgEl.src = group[index].src;
+    overlay.classList.add('open');
+    document.documentElement.classList.add('lb-open');
+    document.body.style.overflow = 'hidden';
+  }
+  function close(){
+    overlay.classList.remove('open');
+    document.documentElement.classList.remove('lb-open');
+    document.body.style.overflow = '';
+    imgEl.removeAttribute('src');
+    currentGroup = []; currentIndex = -1;
+  }
+  function show(delta){
+    if (!currentGroup.length) return;
+    currentIndex = (currentIndex + delta + currentGroup.length) % currentGroup.length;
+    imgEl.src = currentGroup[currentIndex].src;
+  }
+
+  // Event delegation on #galerie
+  var gal = document.getElementById('galerie');
+  if (gal){
+    gal.addEventListener('click', function(e){
+      var img = e.target.closest('img');
+      if (!img) return;
+      // ignore clicks on preview images inside <summary>
+      var s = img.closest('summary');
+      if (s) return;
+      // find group = all images within the same <details> (excluding <summary>)
+      var det = img.closest('details');
+      if (!det) return;
+      var group = Array.prototype.filter.call(det.querySelectorAll('img'), function(el){
+        return !el.closest('summary');
+      });
+      var index = group.indexOf(img);
+      if (index < 0) index = 0;
+      openWith(group, index);
+      e.preventDefault();
+    }, true);
+  }
+
+  // Buttons & overlay interactions
+  btnClose.addEventListener('click', close);
+  btnPrev.addEventListener('click', function(){ show(-1); });
+  btnNext.addEventListener('click', function(){ show(1); });
+  overlay.addEventListener('click', function(e){
+    // click outside the image closes
+    if (e.target === overlay) close();
+  });
+
+  // Keyboard
+  document.addEventListener('keydown', function(e){
+    if (!overlay.classList.contains('open')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') show(-1);
+    if (e.key === 'ArrowRight') show(1);
+  });
+})();</script><script>
+(function(){
+  // Normalize helper
+  function norm(s){return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();}
+  // map slug->id suffix
+  function slugToId(slug){
+    slug = (slug||'').toLowerCase();
+    if (slug.indexOf('nezdenice')!==-1) return 'nezdenice';
+    if (slug.indexOf('osvetimany')!==-1) return 'osvetimany';
+    if (slug.indexOf('reuse')!==-1) return 'reuse';
+    if (slug.indexOf('brest')!==-1) return 'brest';
+    return '';
+  }
+
+  // Ensure every details in #galerie has an id
+  function ensureDetailIds(){
+    document.querySelectorAll('#galerie details').forEach(function(det){
+      if (det.id) return;
+      // try from summary
+      var title = det.querySelector('summary')?.textContent || '';
+      var id = slugToId(norm(title));
+      // or from first image src (folder name)
+      if (!id){
+        var img = det.querySelector('img');
+        if (img && img.src){
+          var m = img.src.match(/reference\/([^\/]+)\//i);
+          if (m) id = slugToId(m[1]);
+        }
+      }
+      if (id) det.id = 'galerie-' + id;
+    });
+  }
+
+  // Open given details by slug (nezdenice/osvetimany/reuse/brest)
+  function openBySlug(slug){
+    var id = slugToId(slug);
+    if (!id) return;
+    var det = document.getElementById('galerie-' + id);
+    if (!det) return;
+    det.setAttribute('open','');
+    // smooth scroll to the opened details (not just top of gallery)
+    setTimeout(function(){
+      det.scrollIntoView({behavior:'smooth', block:'start'});
+    }, 60);
+  }
+
+  // Attach handler to home reference thumbnails
+  function hookHomeThumbs(){
+    // assure their href goes to #galerie (so behavior matches "Otevřít stránku s galeriemi")
+    document.querySelectorAll('#reference a.ref-thumbs-link').forEach(function(a){
+      a.setAttribute('href', '#galerie');
+    });
+      document.addEventListener('click', function(e){
+    var a = e.target.closest('#reference a.ref-thumbs-link');
+    if (!a) return;
+
+    // try to infer slug from first img src
+    var firstImg = a.querySelector('img');
+    var slug = '';
+    if (firstImg && firstImg.getAttribute('src')){
+      var m = firstImg.getAttribute('src').match(/reference\/([^\/]+)\//i);
+      if (m) slug = m[1];
+    }
+    // fallback from card heading
+    if (!slug){
+      var card = a.closest('.rounded-2xl');
+      var h = card ? card.querySelector('h2,h3') : null;
+      if (h) slug = norm(h.textContent);
+    }
+
+    // 1) switch to #galerie via location.hash so :target CSS activates and page scrolls
+    location.hash = 'galerie';
+
+    // 2) after the view switches, open the right section and scroll to it
+    setTimeout(function(){ openBySlug(slug); }, 60);
+  }, true);
+}ensureDetailIds();
+  hookHomeThumbs();
+})();</script></body>
 </html>
