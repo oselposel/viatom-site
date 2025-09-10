@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+
+<html lang="cs">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>VIATOM s.r.o.</title>
+<meta content="VIATOM s.r.o. – dopravní a pozemní stavby ve Zlínském a Jihomoravském kraji." name="description"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+      details > summary { list-style: none; cursor: pointer; }
+      details > summary::-webkit-details-marker { display: none; }
+      /* CSS view switching without JS */
+      #home { display:block; }
+      #galerie { display:none; }
+      #galerie:target { display:block; }
+      #galerie:target ~ #home { display:none; }
+    
+  /* package: hero layering + mobile focus more roller */
+  #uvod { position: relative; }
+  #uvod > .hero-media { position:absolute; inset:0; z-index:0; pointer-events:none; }
+  #uvod > .hero-media picture, #uvod > .hero-media img { width:100%; height:100%; object-fit:cover; display:block; }
+  #uvod > .decor-overlay { position:absolute; inset:0; z-index:1; pointer-events:none;
+    background: linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.30) 55%, rgba(0,0,0,0.25) 100%); opacity:1 !important; }
+  #uvod > *:not(.hero-media):not(.decor-overlay) { position:relative; z-index:2; }
+  .decor-overlay { pointer-events:none; }
+  @media (max-width: 767px) {
+    #uvod > .hero-media img { object-position: 80% center; }
+  }
+</style>
+</head>
+<body class="bg-white">
+<!-- NAV (works for both views) -->
+<header class="sticky top-0 z-40 border-b bg-white/90 backdrop-blur">
+<div class="mx-auto w-full max-w-6xl px-4 flex items-center justify-between h-14">
+<svg aria-label="VIATOM logo" class="h-8 w-auto" role="img" viewbox="0 0 210 97" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#FF5050" height="31" width="210" x="0" y="0"></rect>
+<rect fill="#00B0F0" height="31" width="210" x="0" y="33"></rect>
+<rect fill="#D3D3D3" height="31" width="210" x="0" y="66"></rect>
+<text fill="#fff" font-size="28" style="font-weight:800;letter-spacing:2px" text-anchor="middle" x="105" y="57">VIATOM</text>
+</svg>
+<nav class="hidden md:flex items-center gap-2 text-sm">
+<a class="block px-3 py-2 rounded-md hover:bg-gray-100" href="#uvod">Úvod</a>
+<a class="block px-3 py-2 rounded-md hover:bg-gray-100" href="#sluzby">Služby</a>
+<a class="block px-3 py-2 rounded-md hover:bg-gray-100" href="#reference">Reference</a>
+<a class="block px-3 py-2 rounded-md hover:bg-gray-100" href="#kontakt">Kontakt</a>
+</nav>
+<button aria-label="Menu" class="md:hidden p-2" id="menuBtn">
+<div class="w-6 h-0.5 bg-black mb-1"></div>
+<div class="w-6 h-0.5 bg-black mb-1"></div>
+<div class="w-6 h-0.5 bg-black"></div>
+</button>
+</div>
+<div class="hidden md:hidden border-t bg-white" id="mobileMenu">
+<div class="mx-auto w-full max-w-6xl px-4 py-2">
+<a class="block px-3 py-2 rounded-md hover:bg-gray-100" href="#uvod">Úvod</a>
+<a class="block px-3 py-2 rounded-md hover:bg-gray-100" href="#sluzby">Služby</a>
+<a class="block px-3 py-2 rounded-md hover:bg-gray-100" href="#reference">Reference</a>
+<a class="block px-3 py-2 rounded-md hover:bg-gray-100" href="#kontakt">Kontakt</a>
+</div>
+</div>
+</header>
+<!-- ORDER MATTERS: galerie first, then home (for CSS sibling rule) -->
+<main class="min-h-screen" id="galerie" style="background-color:#F5F5F5">
+<header class="border-b bg-white/90 backdrop-blur">
+<div class="mx-auto w-full max-w-6xl px-4 flex items-center justify-between h-14">
+<div class="font-bold">Reference – galerie</div>
+<a class="px-4 py-1 rounded border" href="#uvod" style="color:#00B0F0;border-color:#00B0F0">Zpět na hlavní stránku</a>
+</div>
+</header>
+<section class="py-12 sm:py-16">
+<div class="mx-auto w-full max-w-6xl px-4">
+<p class="text-gray-700 mb-6">Kliknutím na galerii zobrazíte náhledy. Po nahrání fotek doplníme skutečné obrázky.</p>
+<details class="rounded-2xl border bg-white p-4 mb-4" open="">
+<summary class="cursor-pointer font-semibold text-gray-900">Nezdenice – chodník</summary>
+<div class="mt-4"><div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"><figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N1.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">N1.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N2.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">N2.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N3.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">N3.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N4.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">N4.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N5.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">N5.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N6.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">N6.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N7.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">N7.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N8.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">N8.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N9.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">N9.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N10.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">N10.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N11.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">N11.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N12.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">N12.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N13.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">N13.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N14.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">N14.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">N15.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">N15.jpg</figcaption>
+</figure></div></div>
+</details>
+<details class="rounded-2xl border bg-white p-4 mb-4">
+<summary class="cursor-pointer font-semibold text-gray-900">Osvětimany – parkování</summary>
+<div class="mt-4"><div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"><figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O1.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">O1.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O2.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">O2.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O3.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">O3.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O4.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">O4.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O5.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">O5.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O6.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">O6.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O7.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">O7.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O8.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">O8.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O9.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">O9.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O10.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">O10.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O11.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">O11.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O12.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">O12.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O13.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">O13.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O14.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">O14.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O15.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">O15.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O16.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">O16.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">O17.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">O17.jpg</figcaption>
+</figure></div></div>
+</details>
+<details class="rounded-2xl border bg-white p-4 mb-4">
+<summary class="cursor-pointer font-semibold text-gray-900">Re-Use centrum – Nezdenice</summary>
+<div class="mt-4"><div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"><figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R1.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">R1.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R2.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">R2.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R3.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">R3.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R4.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">R4.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R5.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">R5.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R6.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">R6.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R7.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">R7.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R8.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">R8.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R9.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">R9.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R10.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">R10.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R11.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">R11.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R12.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">R12.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R13.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">R13.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R14.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">R14.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R15.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">R15.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R16.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">R16.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R17.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">R17.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R18.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">R18.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R19.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">R19.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R20.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">R20.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R21.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">R21.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R22.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">R22.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">R23.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">R23.jpg</figcaption>
+</figure></div></div>
+</details>
+<details class="rounded-2xl border bg-white p-4 mb-4">
+<summary class="cursor-pointer font-semibold text-gray-900">Břest – sběrná místa</summary>
+<div class="mt-4"><div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"><figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B1.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B1.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B2.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B2.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B3.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B3.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B4.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B4.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B5.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B5.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B6.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B6.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B7.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B7.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B8.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B8.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B9.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B9.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B10.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B10.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B11.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B11.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B12.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B12.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B13.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B13.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B14.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B14.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B15.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B15.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B16.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B16.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B17.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B17.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B18.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B18.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B19.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B19.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B20.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B20.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B21.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B21.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B22.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B22.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B23.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B23.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B24.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B24.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B25.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B25.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B26.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B26.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B27.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B27.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B28.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B28.jpg</figcaption>
+</figure>
+<figure class="group border rounded-xl overflow-hidden bg-white">
+<div class="aspect-video bg-gray-100 flex items-center justify-center text-xs text-gray-500">B29.jpg</div>
+<figcaption class="p-2 text-xs text-gray-500">B29.jpg</figcaption>
+</figure></div></div>
+</details>
+</div>
+</section>
+<footer class="border-t py-8 bg-white">
+<div class="mx-auto w-full max-w-6xl px-4 text-xs text-gray-400">© <span id="year"></span> VIATOM s.r.o.</div>
+</footer>
+</main>
+<main class="min-h-screen flex flex-col" id="home">
+<section class="relative overflow-hidden" id="uvod" style="background-color:#fff"><div class="hero-media"><picture><source media="(min-width: 768px)" srcset="img/hero/valec-1920.webp" type="image/webp"/><source srcset="img/hero/valec-768.webp" type="image/webp"/><img alt="Válcování čerstvého asfaltu – detail spodní části válce (VIATOM)" decoding="async" loading="eager" src="img/hero/valec-1920.jpg"/></picture></div>
+<div class="absolute inset-0 opacity-5" style="background:radial-gradient(1200px 600px at 80% -10%, #FF5050, transparent)"></div>
+<div class="mx-auto w-full max-w-6xl px-4 grid lg:grid-cols-2 gap-8 items-center py-16">
+<div>
+<p class="text-sm font-semibold tracking-widest" style="color:#FF5050">Dopravní a pozemní stavby</p>
+<h1 class="text-3xl sm:text-4xl font-extrabold mt-2" style="color:#00B0F0">
+              Chystá vaše obec, firma, nebo soukromý investor <span class="whitespace-nowrap">realizaci stavby?</span>
+</h1>
+<p class="mt-4 leading-relaxed text-white" style="color:#fff">
+              Jsme stavební firma z Uherského Hradiště. Realizujeme dopravní a pozemní stavby v rámci Zlínského a Jihomoravského kraje.
+              Tým tvoří zkušení odborníci s autorizacemi pro daný obor.
+            </p>
+<div class="mt-6 flex flex-wrap gap-3">
+<a class="inline-flex items-center px-5 py-2 rounded-lg font-semibold text-white" href="#kontakt" style="background-color:#FF5050">Nezávazná konzultace</a>
+<a class="inline-flex items-center px-5 py-2 rounded-lg font-semibold border" href="#galerie" style="border-color:#00B0F0;color:#00B0F0;background-color:#fff;border-color:#fff;color:#00B0F0">Zobrazit reference</a>
+</div>
+</div>
+<div class="rounded-2xl border bg-white p-6 shadow-sm">
+<ul class="grid sm:grid-cols-2 gap-3 text-sm">
+<li class="flex items-center gap-3 border rounded-xl px-3 py-2"><span class="inline-block w-2 h-2 rounded-full" style="background-color:#FF5050"></span><span class="font-medium text-gray-900">Komunikace</span></li>
+<li class="flex items-center gap-3 border rounded-xl px-3 py-2"><span class="inline-block w-2 h-2 rounded-full" style="background-color:#FF5050"></span><span class="font-medium text-gray-900">Chodníky</span></li>
+<li class="flex items-center gap-3 border rounded-xl px-3 py-2"><span class="inline-block w-2 h-2 rounded-full" style="background-color:#FF5050"></span><span class="font-medium text-gray-900">Zpevněné plochy</span></li>
+<li class="flex items-center gap-3 border rounded-xl px-3 py-2"><span class="inline-block w-2 h-2 rounded-full" style="background-color:#FF5050"></span><span class="font-medium text-gray-900">Hřiště</span></li>
+<li class="flex items-center gap-3 border rounded-xl px-3 py-2"><span class="inline-block w-2 h-2 rounded-full" style="background-color:#FF5050"></span><span class="font-medium text-gray-900">Halové objekty</span></li>
+<li class="flex items-center gap-3 border rounded-xl px-3 py-2"><span class="inline-block w-2 h-2 rounded-full" style="background-color:#FF5050"></span><span class="font-medium text-gray-900">Pozemní stavby</span></li>
+</ul>
+</div>
+</div>
+</section>
+<section class="py-12 sm:py-16" id="sluzby">
+<div class="mx-auto w-full max-w-6xl px-4">
+<p class="text-xs uppercase tracking-widest text-gray-500 mb-2">Služby</p>
+<h2 class="text-2xl sm:text-3xl font-extrabold mb-6" style="color:#00B0F0">Výstavba, rekonstrukce, opravy</h2>
+<div class="grid lg:grid-cols-2 gap-8">
+<div>
+<h3 class="text-lg font-bold mb-2">Kompletní dodávka</h3>
+<p class="text-gray-700 leading-relaxed">
+                Od zemních prací až po finální povrchy. Realizujeme související pozemní stavby, zejména halové objekty.
+              </p>
+<p class="text-gray-700 leading-relaxed mt-3">
+                Máte zájem o konzultaci nebo zpracování cenové nabídky? Ozvěte se nám – připravíme řešení na míru.
+              </p>
+</div>
+<div class="rounded-2xl border p-6 bg-white">
+<dl class="grid sm:grid-cols-2 gap-x-6 gap-y-4 text-sm">
+<div><dt class="font-semibold text-gray-900">Komunikace &amp; chodníky</dt><dd class="text-gray-600">vč. odvodnění, obrub, přechodů, mobiliáře</dd></div>
+<div><dt class="font-semibold text-gray-900">Zpevněné plochy</dt><dd class="text-gray-600">parkoviště, nájezdy, manipulační plochy</dd></div>
+<div><dt class="font-semibold text-gray-900">Hřiště</dt><dd class="text-gray-600">povrchy, obruby, oplocení, vybavení</dd></div>
+<div><dt class="font-semibold text-gray-900">Halové objekty</dt><dd class="text-gray-600">základy, konstrukce, zateplení, zpevněná plocha</dd></div>
+</dl>
+</div>
+</div>
+</div>
+</section>
+<section class="py-12 sm:py-16" id="reference">
+<div class="mx-auto w-full max-w-6xl px-4">
+<p class="text-xs uppercase tracking-widest text-gray-500 mb-2">Ukázky realizací</p>
+<h2 class="text-2xl sm:text-3xl font-extrabold mb-6" style="color:#00B0F0">Reference</h2>
+<div class="grid md:grid-cols-2 gap-6 items-center">
+<div class="rounded-2xl border bg-white p-6"><h3 class="text-lg font-bold mb-2">Nezdenice – oprava chodníku</h3><p class="text-gray-700">Silnice II/495 – průběžná oprava chodníku podél komunikace.</p><p class="text-xs text-gray-500 mt-2">Galerie: N1.jpg … N15.jpg</p></div>
+<div class="rounded-2xl border bg-white p-6"><h3 class="text-lg font-bold mb-2">Osvětimany – parkovací stání</h3><p class="text-gray-700">Nová parkovací stání u zastávky.</p><p class="text-xs text-gray-500 mt-2">Galerie: O1.jpg … O17.jpg</p></div>
+<div class="rounded-2xl border bg-white p-6"><h3 class="text-lg font-bold mb-2">Re-Use centrum Nezdenice</h3><p class="text-gray-700">Stavební úpravy a zpevněné plochy.</p><p class="text-xs text-gray-500 mt-2">Galerie: R1.jpg … R23.jpg</p></div>
+<div class="rounded-2xl border bg-white p-6"><h3 class="text-lg font-bold mb-2">Břest – sběrná místa odpadu</h3><p class="text-gray-700">Nová sběrná stání a související úpravy.</p><p class="text-xs text-gray-500 mt-2">Galerie: B1.jpg … B29.jpg</p></div>
+</div>
+<div class="mt-6">
+<a class="inline-flex items-center px-5 py-2 rounded-lg font-semibold text-white" href="#galerie" style="background-color:#00B0F0">Otevřít stránku s galeriemi</a>
+</div>
+</div>
+</section>
+<section class="py-12 sm:py-16" id="kontakt">
+<div class="mx-auto w-full max-w-6xl px-4">
+<p class="text-xs uppercase tracking-widest text-gray-500 mb-2">Ozvěte se nám</p>
+<h2 class="text-2xl sm:text-3xl font-extrabold mb-6" style="color:#00B0F0">Kontakt</h2>
+<div class="grid lg:grid-cols-2 gap-8">
+<div class="rounded-2xl border p-6 bg-white">
+<address class="not-italic text-gray-800 leading-7">
+<p class="font-semibold text-lg">VIATOM s.r.o.</p>
+<p>Jabloňová 487, Sady, 686 01 Uherské Hradiště</p>
+<p>IČO: 21928878  •  DIČ: CZ21928878</p>
+<p class="mt-4 font-semibold">Ing. Tomáš Pavlík</p>
+<p>Tel.: <a class="underline" href="tel:+420720958858">720 958 858</a></p>
+<p>E-mail: <a class="underline" href="mailto:tomaspavlik@email.cz">tomaspavlik@email.cz</a></p>
+</address>
+</div>
+</div>
+</div>
+</section>
+</main>
+<a class="fixed bottom-5 right-5 shadow-lg rounded-full px-5 py-3 font-semibold text-white" href="#kontakt" style="background-color:#FF5050">Poptat nabídku</a>
+<script>
+      const menuBtn = document.getElementById('menuBtn');
+      const mobileMenu = document.getElementById('mobileMenu');
+      if (menuBtn) menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+      const yearEl = document.getElementById('year');
+      if (yearEl) yearEl.textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
