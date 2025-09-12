@@ -463,34 +463,49 @@ details.gallery-group[open] > summary { border-bottom-left-radius:0.5rem; border
 </footer>
 </main>
 <main class="min-h-screen flex flex-col" id="home">
-<section class="relative overflow-hidden" id="uvod" style="background-color:#fff"><div class="hero-media"><picture><source media="(min-width: 768px)" srcset="img/hero/valec-1920.webp" type="image/webp"/><source srcset="img/hero/valec-768.webp" type="image/webp"/><img alt="Válcování čerstvého asfaltu – detail spodní části válce (VIATOM)" decoding="async" loading="eager" src="img/hero/valec-1920.jpg"/></picture></div>
-<div class="absolute inset-0 opacity-5" style="background:radial-gradient(1200px 600px at 80% -10%, #FF5050, transparent)"></div>
-<div class="mx-auto w-full max-w-6xl px-4 grid lg:grid-cols-2 gap-8 items-center py-16">
-<div>
-<p class="text-sm font-semibold tracking-widest" style="color:#FF5050">Dopravní a pozemní stavby</p>
-<h1 class="text-3xl sm:text-4xl font-extrabold mt-2" style="color:#00B0F0">
-              Chystá vaše obec, firma, nebo soukromý investor <span class="whitespace-nowrap">realizaci stavby?</span>
-</h1>
-<p class="text-gray-700 mt-4 leading-relaxed text-white" style="color:#fff">
-              Jsme stavební firma z Uherského Hradiště. Realizujeme dopravní a pozemní stavby v rámci Zlínského a Jihomoravského kraje.
-              Tým tvoří zkušení odborníci s autorizacemi pro daný obor.
-            </p>
-<div class="mt-6 flex flex-wrap gap-3">
-<a class="inline-flex items-center px-5 py-2 rounded-lg font-semibold text-white" href="#kontakt" style="background-color:#FF5050">Nezávazná konzultace</a>
-<a class="inline-flex items-center px-5 py-2 rounded-lg font-semibold border" href="#galerie" style="border-color:#00B0F0;color:#00B0F0;background-color:#fff;border-color:#fff;color:#0ea5e9">Zobrazit reference</a>
-</div>
-</div>
-<div class="rounded-2xl border bg-white p-6 shadow-sm">
-<ul class="grid sm:grid-cols-2 gap-3 text-sm">
-<li class="flex items-center gap-3 border rounded-xl px-3 py-2"><span class="inline-block w-2 h-2 rounded-full" style="background-color:#FF5050"></span><span class="font-medium text-gray-900">Komunikace</span></li>
-<li class="flex items-center gap-3 border rounded-xl px-3 py-2"><span class="inline-block w-2 h-2 rounded-full" style="background-color:#FF5050"></span><span class="font-medium text-gray-900">Chodníky</span></li>
-<li class="flex items-center gap-3 border rounded-xl px-3 py-2"><span class="inline-block w-2 h-2 rounded-full" style="background-color:#FF5050"></span><span class="font-medium text-gray-900">Zpevněné plochy</span></li>
-<li class="flex items-center gap-3 border rounded-xl px-3 py-2"><span class="inline-block w-2 h-2 rounded-full" style="background-color:#FF5050"></span><span class="font-medium text-gray-900">Hřiště</span></li>
-<li class="flex items-center gap-3 border rounded-xl px-3 py-2"><span class="inline-block w-2 h-2 rounded-full" style="background-color:#FF5050"></span><span class="font-medium text-gray-900">Halové objekty</span></li>
-<li class="flex items-center gap-3 border rounded-xl px-3 py-2"><span class="inline-block w-2 h-2 rounded-full" style="background-color:#FF5050"></span><span class="font-medium text-gray-900">Pozemní stavby</span></li>
-</ul>
-</div>
-</div>
+<section class="relative overflow-hidden min-h-screen" id="uvod">
+  <div class="hero-media absolute inset-0">
+    <picture>
+      <source type="image/webp" media="(min-width: 768px)" srcset="img/hero/silnice-1920.webp">
+      <source type="image/webp" srcset="img/hero/silnice-768.webp">
+      <img 
+        src="img/hero/silnice-1920.jpg"
+        srcset="img/hero/silnice-768.jpg 768w, img/hero/silnice-1920.jpg 1920w"
+        sizes="100vw"
+        alt="Silnice za soumraku – VIATOM"
+        class="w-full h-full object-cover"
+        decoding="async"
+        loading="eager">
+    </picture>
+  </div>
+  <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/20"></div>
+  <div class="relative z-10 mx-auto w-full max-w-6xl px-4 grid lg:grid-cols-2 gap-8 items-center min-h-screen">
+    <div>
+      <p class="text-sm font-semibold tracking-widest text-red-500">Dopravní a pozemní stavby</p>
+      <h1 class="text-3xl sm:text-4xl font-extrabold mt-2 text-sky-500">
+        Chystá vaše obec, firma, nebo soukromý investor <span class="whitespace-nowrap">realizaci stavby?</span>
+      </h1>
+      <p class="mt-4 leading-relaxed text-white">
+        Jsme stavební firma z Uherského Hradiště. Realizujeme dopravní a pozemní stavby v rámci Zlínského a Jihomoravského kraje.
+        Tým tvoří zkušení odborníci s autorizacemi pro daný obor.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href="#kontakt" class="inline-flex items-center px-5 py-2 rounded-lg font-semibold text-white bg-red-500">Nezávazná konzultace</a>
+        <a href="#galerie" class="inline-flex items-center px-5 py-2 rounded-lg font-semibold border border-sky-500 text-sky-500 bg-white">Zobrazit reference</a>
+      </div>
+    </div>
+
+    <div class="rounded-2xl border bg-white p-6 shadow-sm">
+      <ul class="grid sm:grid-cols-2 gap-3 text-sm">
+        <li class="flex items-center gap-3 border rounded-xl px-3 py-2"><span class="w-2 h-2 rounded-full bg-red-500"></span><span class="font-medium text-gray-900">Komunikace</span></li>
+        <li class="flex items-center gap-3 border rounded-xl px-3 py-2"><span class="w-2 h-2 rounded-full bg-red-500"></span><span class="font-medium text-gray-900">Chodníky</span></li>
+        <li class="flex items-center gap-3 border rounded-xl px-3 py-2"><span class="w-2 h-2 rounded-full bg-red-500"></span><span class="font-medium text-gray-900">Zpevněné plochy</span></li>
+        <li class="flex items-center gap-3 border rounded-xl px-3 py-2"><span class="w-2 h-2 rounded-full bg-red-500"></span><span class="font-medium text-gray-900">Hřiště</span></li>
+        <li class="flex items-center gap-3 border rounded-xl px-3 py-2"><span class="w-2 h-2 rounded-full bg-red-500"></span><span class="font-medium text-gray-900">Halové objekty</span></li>
+        <li class="flex items-center gap-3 border rounded-xl px-3 py-2"><span class="w-2 h-2 rounded-full bg-red-500"></span><span class="font-medium text-gray-900">Pozemní stavby</span></li>
+      </ul>
+    </div>
+  </div>
 </section>
 <section class="py-12 sm:py-16" id="sluzby">
 <div class="mx-auto w-full max-w-6xl px-4">
