@@ -10,9 +10,13 @@
       imagesizes="100vw"/>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
+  /* ===== base scroll ===== */
   html{scroll-behavior:smooth}
   section[id],main[id],div[id]{scroll-margin-top:68px}
   #galerie{scroll-margin-top:120px}
+  /* NOVÉ: ať je vidět hlavička sekce (summary) pod sticky lištou */
+  details.gallery-group{scroll-margin-top:120px}
+  details.gallery-group>summary{scroll-margin-top:120px}
 
   body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#000}
   details>summary{list-style:none;cursor:pointer}
@@ -380,7 +384,7 @@
         <div class="rounded-2xl border bg-white p-6">
           <h3 class="text-lg font-bold mb-2">Nezdenice – oprava chodníku</h3>
           <p class="text-gray-700">Silnice II/495 – průběžná oprava chodníku podél komunikace.</p>
-          <a class="ref-thumbs-link" aria-label="Otevřít galerii – Nezdenice – oprava chodníku" href="#galerie-nezdenice">
+          <a class="ref-thumbs-link" aria-label="Otevřít galerii – Nezdenice – chodník" href="#galerie-nezdenice">
             <div class="ref-thumbs">
               <img src="img/reference/nezdenice/N1.jpg" alt="N1" loading="lazy"/>
               <img src="img/reference/nezdenice/N2.jpg" alt="N2" loading="lazy"/>
@@ -506,16 +510,15 @@
 })();
 </script>
 
-<!-- Galerie: klik z karet -> přepnout na #galerie a OTEVŘÍT POUZE SEKCI -->
+<!-- Galerie: klik z karet -> přepnout na #galerie a OTEVŘÍT SEKCI + scroll na SUMMARY -->
 <script>
 (function(){
-  function norm(s){return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();}
   function slugToId(slug){
     slug=(slug||'').toLowerCase();
-    if(slug.indexOf('nezdenice')!==-1) return 'nezdenice';
-    if(slug.indexOf('osvetimany')!==-1) return 'osvetimany';
-    if(slug.indexOf('reuse')!==-1) return 'reuse';
-    if(slug.indexOf('brest')!==-1) return 'brest';
+    if(slug.includes('nezdenice')) return 'nezdenice';
+    if(slug.includes('osvetimany')) return 'osvetimany';
+    if(slug.includes('reuse')) return 'reuse';
+    if(slug.includes('brest')) return 'brest';
     return '';
   }
 
@@ -523,7 +526,12 @@
     var id=slugToId(slug); if(!id) return;
     var det=document.getElementById('galerie-'+id); if(!det) return;
     det.setAttribute('open','');
-    setTimeout(function(){ det.scrollIntoView({behavior:'smooth', block:'start'}); }, 60);
+
+    // Scroll přímo na záhlaví sekce (hlavička viditelná pod sticky headerem)
+    var sum=det.querySelector('summary')||det;
+    setTimeout(function(){
+      sum.scrollIntoView({behavior:'smooth', block:'start'});
+    }, 60);
   }
 
   // zachyť kliky na náhledy v kartách Reference
@@ -538,7 +546,7 @@
     }
     if(!slug){
       var card=a.closest('.rounded-2xl'); var h=card?card.querySelector('h2,h3'):null;
-      if(h) slug=norm(h.textContent);
+      if(h) slug=h.textContent;
     }
 
     // přepni do zobrazení galerie (kvůli CSS :target) a otevři sekci – bez lightboxu
