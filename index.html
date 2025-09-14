@@ -56,7 +56,7 @@
   #uvod>*:not(.hero-media):not(.decor-overlay){position:relative;z-index:2}
   @media (max-width:767px){#uvod>.hero-media img{object-position:80% center}}
 
-  /* Header — FIXED (ne sticky), ať nahoře nic nepřidává */
+  /* Header — FIXED (bez černého pruhu) */
   header.site-header{
     position:fixed; top:0; left:0; right:0; width:100%;
     z-index:50;
@@ -68,8 +68,6 @@
   }
   header.site-header a{color:#111}
   header.site-header .navlink:hover{background:rgba(0,0,0,.06)}
-
-  /* Režim nad hero – výchozí po načtení */
   header.site-header.on-hero{
     border-color:transparent !important;
     background:transparent !important;
@@ -81,11 +79,11 @@
   header.site-header.on-hero .navlink:hover{background:rgba(255,255,255,.12)}
   header.site-header.on-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.42),rgba(0,0,0,0));pointer-events:none}
 
-  /* HERO – „glass“ karta s položkami */
+  /* HERO – panel */
   .hero-card{
     border-radius:1.25rem;
     padding:1.25rem;
-    background:rgba(15,23,42,.55);               /* slate-900 / 55% */
+    background:rgba(15,23,42,.55);
     border:1px solid rgba(255,255,255,.08);
     color:#e5e7eb;
     backdrop-filter:blur(10px);
@@ -196,7 +194,24 @@
         </summary>
         <div class="mt-4">
           <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <template id="osvetimany-photos"></template>
+            <!-- O1..O17 -->
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O1.jpg" alt="O1" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O2.jpg" alt="O2" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O3.jpg" alt="O3" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O4.jpg" alt="O4" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O5.jpg" alt="O5" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O6.jpg" alt="O6" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O7.jpg" alt="O7" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O8.jpg" alt="O8" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O9.jpg" alt="O9" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O10.jpg" alt="O10" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O11.jpg" alt="O11" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O12.jpg" alt="O12" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O13.jpg" alt="O13" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O14.jpg" alt="O14" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O15.jpg" alt="O15" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O16.jpg" alt="O16" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O17.jpg" alt="O17" loading="lazy" class="gallery-img"/></div></figure>
           </div>
         </div>
       </details>
@@ -213,7 +228,30 @@
         </summary>
         <div class="mt-4">
           <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <template id="reuse-photos"></template>
+            <!-- R1..R23 -->
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R1.jpg" alt="R1" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R2.jpg" alt="R2" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R3.jpg" alt="R3" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R4.jpg" alt="R4" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R5.jpg" alt="R5" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R6.jpg" alt="R6" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R7.jpg" alt="R7" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R8.jpg" alt="R8" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R9.jpg" alt="R9" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R10.jpg" alt="R10" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R11.jpg" alt="R11" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R12.jpg" alt="R12" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R13.jpg" alt="R13" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R14.jpg" alt="R14" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R15.jpg" alt="R15" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R16.jpg" alt="R16" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R17.jpg" alt="R17" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R18.jpg" alt="R18" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R19.jpg" alt="R19" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R20.jpg" alt="R20" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R21.jpg" alt="R21" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R22.jpg" alt="R22" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R23.jpg" alt="R23" loading="lazy" class="gallery-img"/></div></figure>
           </div>
         </div>
       </details>
@@ -230,7 +268,36 @@
         </summary>
         <div class="mt-4">
           <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <template id="brest-photos"></template>
+            <!-- B1..B29 -->
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B1.jpg" alt="B1" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B2.jpg" alt="B2" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B3.jpg" alt="B3" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B4.jpg" alt="B4" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B5.jpg" alt="B5" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B6.jpg" alt="B6" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B7.jpg" alt="B7" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B8.jpg" alt="B8" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B9.jpg" alt="B9" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B10.jpg" alt="B10" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B11.jpg" alt="B11" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B12.jpg" alt="B12" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B13.jpg" alt="B13" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B14.jpg" alt="B14" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B15.jpg" alt="B15" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B16.jpg" alt="B16" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B17.jpg" alt="B17" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B18.jpg" alt="B18" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B19.jpg" alt="B19" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B20.jpg" alt="B20" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B21.jpg" alt="B21" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B22.jpg" alt="B22" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B23.jpg" alt="B23" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B24.jpg" alt="B24" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B25.jpg" alt="B25" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B26.jpg" alt="B26" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B27.jpg" alt="B27" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B28.jpg" alt="B28" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B29.jpg" alt="B29" loading="lazy" class="gallery-img"/></div></figure>
           </div>
         </div>
       </details>
@@ -269,7 +336,7 @@
         </div>
       </div>
 
-      <!-- VRÁCENÝ PANEL V HERO -->
+      <!-- Panel v hero -->
       <div class="hero-card">
         <ul>
           <li class="hero-chip"><span class="hero-dot"></span><span class="hero-label">Komunikace</span></li>
@@ -439,39 +506,47 @@
 })();
 </script>
 
-<!-- Galerie: doplnění id + klik z karet -->
+<!-- Galerie: klik z karet -> přepnout na #galerie a OTEVŘÍT POUZE SEKCI -->
 <script>
 (function(){
   function norm(s){return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();}
-  function slugToId(slug){slug=(slug||'').toLowerCase(); if(slug.indexOf('nezdenice')!==-1) return 'nezdenice'; if(slug.indexOf('osvetimany')!==-1) return 'osvetimany'; if(slug.indexOf('reuse')!==-1) return 'reuse'; if(slug.indexOf('brest')!==-1) return 'brest'; return '';}
-  function ensureDetailIds(){
-    document.querySelectorAll('#galerie details').forEach(function(det){
-      if(det.id) return;
-      var title=det.querySelector('summary')?.textContent||'';
-      var id=slugToId(norm(title));
-      if(!id){
-        var img=det.querySelector('img');
-        if(img&&img.src){var m=img.src.match(/reference\/([^\/]+)\//i); if(m) id=slugToId(m[1]);}
-      }
-      if(id) det.id='galerie-'+id;
-    });
+  function slugToId(slug){
+    slug=(slug||'').toLowerCase();
+    if(slug.indexOf('nezdenice')!==-1) return 'nezdenice';
+    if(slug.indexOf('osvetimany')!==-1) return 'osvetimany';
+    if(slug.indexOf('reuse')!==-1) return 'reuse';
+    if(slug.indexOf('brest')!==-1) return 'brest';
+    return '';
   }
+
   function openBySlug(slug){
     var id=slugToId(slug); if(!id) return;
     var det=document.getElementById('galerie-'+id); if(!det) return;
-    det.setAttribute('open',''); setTimeout(function(){det.scrollIntoView({behavior:'smooth',block:'start'})},60);
+    det.setAttribute('open','');
+    setTimeout(function(){ det.scrollIntoView({behavior:'smooth', block:'start'}); }, 60);
   }
-  function hookHomeThumbs(){
-    document.querySelectorAll('#reference a.ref-thumbs-link').forEach(function(a){a.setAttribute('href','#galerie')});
-    document.addEventListener('click',function(e){
-      var a=e.target.closest('#reference a.ref-thumbs-link'); if(!a) return;
-      var firstImg=a.querySelector('img'); var slug='';
-      if(firstImg&&firstImg.getAttribute('src')){var m=firstImg.getAttribute('src').match(/reference\/([^\/]+)\//i); if(m) slug=m[1];}
-      if(!slug){var card=a.closest('.rounded-2xl'); var h=card?card.querySelector('h2,h3'):null; if(h) slug=norm(h.textContent);}
-      location.hash='galerie'; setTimeout(function(){openBySlug(slug)},60);
-    },true);
-  }
-  ensureDetailIds(); hookHomeThumbs();
+
+  // zachyť kliky na náhledy v kartách Reference
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('#reference a.ref-thumbs-link'); if(!a) return;
+
+    // určím slug podle src prvního obrázku nebo nadpisu karty
+    var firstImg=a.querySelector('img'); var slug='';
+    if(firstImg&&firstImg.getAttribute('src')){
+      var m=firstImg.getAttribute('src').match(/reference\/([^\/]+)\//i);
+      if(m) slug=m[1];
+    }
+    if(!slug){
+      var card=a.closest('.rounded-2xl'); var h=card?card.querySelector('h2,h3'):null;
+      if(h) slug=norm(h.textContent);
+    }
+
+    // přepni do zobrazení galerie (kvůli CSS :target) a otevři sekci – bez lightboxu
+    location.hash='galerie';
+    setTimeout(function(){ openBySlug(slug); }, 60);
+
+    e.preventDefault();
+  },true);
 })();
 </script>
 
