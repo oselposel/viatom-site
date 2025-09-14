@@ -14,7 +14,7 @@
   section[id],main[id],div[id]{scroll-margin-top:68px}
   #galerie{scroll-margin-top:120px}
 
-  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background:#000;}
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#000}
   details>summary{list-style:none;cursor:pointer}
   details>summary::-webkit-details-marker{display:none}
 
@@ -56,8 +56,16 @@
   #uvod>*:not(.hero-media):not(.decor-overlay){position:relative;z-index:2}
   @media (max-width:767px){#uvod>.hero-media img{object-position:80% center}}
 
-  /* Sticky header */
-  header.site-header{position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(0,0,0,.08);background:rgba(255,255,255,.94);backdrop-filter:blur(8px);color:#111;transition:background .25s ease,color .25s ease,border-color .25s ease}
+  /* Header — FIXED (ne sticky), ať nahoře nic nepřidává */
+  header.site-header{
+    position:fixed; top:0; left:0; right:0; width:100%;
+    z-index:50;
+    border-bottom:1px solid rgba(0,0,0,.08);
+    background:rgba(255,255,255,.94);
+    backdrop-filter:blur(8px);
+    color:#111;
+    transition:background .25s ease,color .25s ease,border-color .25s ease, box-shadow .25s ease;
+  }
   header.site-header a{color:#111}
   header.site-header .navlink:hover{background:rgba(0,0,0,.06)}
 
@@ -67,36 +75,34 @@
     background:transparent !important;
     color:#fff !important;
     backdrop-filter:none !important;
+    box-shadow:none !important;
   }
   header.site-header.on-hero a{color:#fff !important}
   header.site-header.on-hero .navlink:hover{background:rgba(255,255,255,.12)}
   header.site-header.on-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.42),rgba(0,0,0,0));pointer-events:none}
 
-  /* ===== Glass panel v HERO (nahrazuje bílé okno) ===== */
-  .glass-card{
-    border-radius: 1rem;
-    padding: 1.25rem;
-    background: linear-gradient(180deg, rgba(17,25,40,.68), rgba(17,25,40,.55));
-    border: 1px solid rgba(255,255,255,.16);
-    box-shadow: 0 8px 24px rgba(0,0,0,.35);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    color: #fff;
-  }
-  .glass-list{display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:.6rem}
-  @media (min-width:640px){ .glass-list{grid-template-columns:repeat(2,minmax(0,1fr));} }
-  .chip{
-    display:flex;align-items:center;gap:.6rem;
-    border-radius:.85rem;
-    padding:.6rem .8rem;
-    background: rgba(255,255,255,.06);
-    border:1px solid rgba(255,255,255,.12);
-    transition: background .2s ease,border-color .2s ease, transform .15s ease;
+  /* HERO – „glass“ karta s položkami */
+  .hero-card{
+    border-radius:1.25rem;
+    padding:1.25rem;
+    background:rgba(15,23,42,.55);               /* slate-900 / 55% */
+    border:1px solid rgba(255,255,255,.08);
     color:#e5e7eb;
+    backdrop-filter:blur(10px);
+    box-shadow:0 20px 40px rgba(0,0,0,.35);
   }
-  .chip:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);transform:translateY(-1px)}
-  .chip .dot{width:.5rem;height:.5rem;border-radius:9999px;background:#FF5050;flex:0 0 auto;box-shadow:0 0 0 2px rgba(255,80,80,.15)}
-  .chip .label{font-weight:600;letter-spacing:.1px}
+  .hero-card ul{display:grid;gap:.75rem}
+  @media (min-width:640px){ .hero-card ul{grid-template-columns:repeat(2,minmax(0,1fr));} }
+  .hero-chip{
+    display:flex;align-items:center;gap:.75rem;
+    border-radius:.85rem;padding:.65rem .9rem;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.08);
+    transition:background .2s ease,border-color .2s ease,transform .15s ease;
+  }
+  .hero-chip:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.16);transform:translateY(-1px)}
+  .hero-dot{width:.5rem;height:.5rem;border-radius:9999px;background:#FF5050;box-shadow:0 0 0 2px rgba(255,80,80,.22)}
+  .hero-label{font-weight:700;letter-spacing:.1px}
 </style>
 </head>
 <body>
@@ -263,15 +269,15 @@
         </div>
       </div>
 
-      <!-- GLASS PANEL místo bílého boxu -->
-      <div class="glass-card">
-        <ul class="glass-list">
-          <li class="chip"><span class="dot"></span><span class="label">Komunikace</span></li>
-          <li class="chip"><span class="dot"></span><span class="label">Chodníky</span></li>
-          <li class="chip"><span class="dot"></span><span class="label">Zpevněné plochy</span></li>
-          <li class="chip"><span class="dot"></span><span class="label">Hřiště</span></li>
-          <li class="chip"><span class="dot"></span><span class="label">Halové objekty</span></li>
-          <li class="chip"><span class="dot"></span><span class="label">Pozemní stavby</span></li>
+      <!-- VRÁCENÝ PANEL V HERO -->
+      <div class="hero-card">
+        <ul>
+          <li class="hero-chip"><span class="hero-dot"></span><span class="hero-label">Komunikace</span></li>
+          <li class="hero-chip"><span class="hero-dot"></span><span class="hero-label">Chodníky</span></li>
+          <li class="hero-chip"><span class="hero-dot"></span><span class="hero-label">Zpevněné plochy</span></li>
+          <li class="hero-chip"><span class="hero-dot"></span><span class="hero-label">Hřiště</span></li>
+          <li class="hero-chip"><span class="hero-dot"></span><span class="hero-label">Halové objekty</span></li>
+          <li class="hero-chip"><span class="hero-dot"></span><span class="hero-label">Pozemní stavby</span></li>
         </ul>
       </div>
     </div>
