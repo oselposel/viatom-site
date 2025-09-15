@@ -8,8 +8,27 @@
 <link rel="preload" as="image" href="img/hero/silnice-1920.jpg"
       imagesrcset="img/hero/silnice-768.jpg 768w, img/hero/silnice-1920.jpg 1920w"
       imagesizes="100vw"/>
+<!-- Favicon (stejná složka jako logo) -->
+<link rel="icon" type="image/svg+xml" href="img/logo/favicon.svg"/>
+
+<!-- 0) Velmi brzký skript: pokud URL hash začíná na #galerie, označ <html> -->
+<script>
+(function(){
+  try{
+    if(/^#galerie/.test(location.hash)){
+      document.documentElement.classList.add('is-gallery');
+    }
+  }catch(e){}
+})();
+</script>
+
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
+  :root{
+    /* výška horní lišty + safe-area pro mobily s výřezem */
+    --header-h: calc(56px + env(safe-area-inset-top, 0px));
+  }
+
   /* ===== base scroll ===== */
   html{scroll-behavior:smooth}
   section[id],main[id],div[id]{scroll-margin-top:68px}
@@ -60,7 +79,7 @@
   #uvod>*:not(.hero-media):not(.decor-overlay){position:relative;z-index:2}
   @media (max-width:767px){#uvod>.hero-media img{object-position:80% center}}
 
-  /* Header — FIXED (bez černého pruhu) */
+  /* Header — FIXED */
   header.site-header{
     position:fixed; top:0; left:0; right:0; width:100%;
     z-index:50;
@@ -72,6 +91,8 @@
   }
   header.site-header a{color:#111}
   header.site-header .navlink:hover{background:rgba(0,0,0,.06)}
+
+  /* Stav "na hero" (jen když jsme na vršku Úvodu) */
   header.site-header.on-hero{
     border-color:transparent !important;
     background:transparent !important;
@@ -80,7 +101,6 @@
     box-shadow:none !important;
   }
   header.site-header.on-hero a{color:#fff !important}
-  header.site-header.on-hero .navlink:hover{background:rgba(255,255,255,.12)}
   header.site-header.on-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.42),rgba(0,0,0,0));pointer-events:none}
 
   /* HERO – panel */
@@ -105,6 +125,34 @@
   .hero-chip:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.16);transform:translateY(-1px)}
   .hero-dot{width:.5rem;height:.5rem;border-radius:9999px;background:#FF5050;box-shadow:0 0 0 2px rgba(255,80,80,.22)}
   .hero-label{font-weight:700;letter-spacing:.1px}
+
+  /* ===== Přinucení bílé hlavičky, když jsme v galerii (bez flashnutí) ===== */
+  html.is-gallery header.site-header{
+    border-color:rgba(0,0,0,.08) !important;
+    background:rgba(255,255,255,.94) !important;
+    color:#111 !important;
+    backdrop-filter:blur(8px) !important;
+    box-shadow:0 1px 0 rgba(0,0,0,.06);
+  }
+  html.is-gallery header.site-header a{color:#111 !important}
+  html.is-gallery header.site-header.on-hero::before{display:none}
+
+  /* ===== hero padding pod fixní header ===== */
+  #uvod .hero-pad{ padding-top: var(--header-h); }
+
+  /* ===== Mobilní menu: vždy čitelné ===== */
+  /* Bílé pozadí a tmavý text, i když je header v .on-hero (průhledný) */
+  #mobileMenu{
+    background: rgba(255,255,255,.98);
+    box-shadow: 0 1px 0 rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.08);
+  }
+  header.site-header.on-hero #mobileMenu{ background: rgba(255,255,255,.98); }
+  header.site-header #mobileMenu a{
+    color:#111 !important;
+  }
+  header.site-header #mobileMenu a:hover{
+    background: rgba(0,0,0,.06);
+  }
 </style>
 </head>
 <body>
@@ -113,12 +161,7 @@
 <header class="site-header on-hero">
   <div class="mx-auto w-full max-w-6xl px-4 flex items-center justify-between h-14">
     <a href="#uvod" class="inline-flex items-center" aria-label="Přejít na úvod">
-      <svg aria-label="VIATOM logo" class="h-8 w-auto" role="img" viewBox="0 0 210 97" xmlns="http://www.w3.org/2000/svg">
-        <rect x="0" y="0" width="210" height="31" fill="#FF5050"></rect>
-        <rect x="0" y="33" width="210" height="31" fill="#00B0F0"></rect>
-        <rect x="0" y="66" width="210" height="31" fill="#D3D3D3"></rect>
-        <text x="105" y="57" fill="#fff" font-size="28" style="font-weight:800;letter-spacing:2px" text-anchor="middle">VIATOM</text>
-      </svg>
+      <img src="img/logo/viatom.svg" alt="VIATOM" class="h-8 w-auto" loading="eager" decoding="async">
     </a>
     <nav class="hidden md:flex items-center gap-2 text-sm">
       <a class="navlink block px-3 py-2 rounded-md" href="#uvod">Úvod</a>
@@ -329,7 +372,8 @@
     </div>
     <div class="decor-overlay"></div>
 
-    <div class="relative z-10 mx-auto w-full max-w-6xl px-4 grid lg:grid-cols-2 gap-8 items-center min-h-screen">
+    <!-- NOVĚ přidané odsazení pod fixní header: class="hero-pad" -->
+    <div class="relative z-10 mx-auto w-full max-w-6xl px-4 grid lg:grid-cols-2 gap-8 items-center min-h-screen hero-pad">
       <div>
         <p class="text-sm font-semibold tracking-widest" style="color:#FF5050">Dopravní a pozemní stavby</p>
         <h1 class="text-3xl sm:text-4xl font-extrabold mt-2" style="color:#00B0F0">Chystá vaše obec, firma, nebo soukromý investor <span class="whitespace-nowrap">realizaci stavby?</span></h1>
@@ -457,12 +501,32 @@
 
 <!-- ===== JS ===== -->
 <script>
-  // Mobile menu & year
-  const menuBtn=document.getElementById('menuBtn');
-  const mobileMenu=document.getElementById('mobileMenu');
-  if(menuBtn) menuBtn.addEventListener('click',()=>mobileMenu.classList.toggle('hidden'));
-  const yearEl=document.getElementById('year');
-  if(yearEl) yearEl.textContent=new Date().getFullYear();
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const header = document.querySelector('header.site-header');
+
+  function isInGallery(){ return /^#galerie/.test(location.hash); }
+
+  if(menuBtn){
+    menuBtn.addEventListener('click', ()=>{
+      mobileMenu.classList.toggle('hidden');
+
+      // Pokud je menu OTEVŘENÉ a jsme na vršku úvodu, zruš průhledný režim,
+      // ať jsou kontrasty (texty) vždy čitelné.
+      if(!mobileMenu.classList.contains('hidden')){
+        header.classList.remove('on-hero');
+      }else{
+        // Po zavření vrátíme průhlednost, jen pokud jsme na vršku a nejsme v galerii
+        if(window.scrollY === 0 && !isInGallery()){
+          header.classList.add('on-hero');
+        }
+      }
+    });
+  }
+
+  // Rok v patičce (ponechávám)
+  const yearEl = document.getElementById('year');
+  if(yearEl) yearEl.textContent = new Date().getFullYear();
 </script>
 
 <!-- Lightbox -->
@@ -515,10 +579,11 @@
 (function(){
   function slugToId(slug){
     slug=(slug||'').toLowerCase();
-    if(slug.includes('nezdenice')) return 'nezdenice';
-    if(slug.includes('osvetimany')) return 'osvetimany';
+    // FIX: reuse musí být vyhodnocen dřív než nezdenice
     if(slug.includes('reuse')) return 'reuse';
+    if(slug.includes('osvetimany')) return 'osvetimany';
     if(slug.includes('brest')) return 'brest';
+    if(slug.includes('nezdenice')) return 'nezdenice';
     return '';
   }
 
@@ -526,19 +591,15 @@
     var id=slugToId(slug); if(!id) return;
     var det=document.getElementById('galerie-'+id); if(!det) return;
     det.setAttribute('open','');
-
-    // Scroll přímo na záhlaví sekce (hlavička viditelná pod sticky headerem)
     var sum=det.querySelector('summary')||det;
     setTimeout(function(){
       sum.scrollIntoView({behavior:'smooth', block:'start'});
     }, 60);
   }
 
-  // zachyť kliky na náhledy v kartách Reference
   document.addEventListener('click',function(e){
     var a=e.target.closest('#reference a.ref-thumbs-link'); if(!a) return;
 
-    // určím slug podle src prvního obrázku nebo nadpisu karty
     var firstImg=a.querySelector('img'); var slug='';
     if(firstImg&&firstImg.getAttribute('src')){
       var m=firstImg.getAttribute('src').match(/reference\/([^\/]+)\//i);
@@ -549,7 +610,6 @@
       if(h) slug=h.textContent;
     }
 
-    // přepni do zobrazení galerie (kvůli CSS :target) a otevři sekci – bez lightboxu
     location.hash='galerie';
     setTimeout(function(){ openBySlug(slug); }, 60);
 
@@ -558,32 +618,39 @@
 })();
 </script>
 
-<!-- Smart header: přepínání podle hero -->
+<!-- Smart header: průhledný jen na hero Úvodu; v galerii vždy bílý -->
 <script>
 (function(){
   var header=document.querySelector('header.site-header');
-  var hero=document.getElementById('uvod');
-  if(!header||!hero) return;
+  if(!header) return;
 
-  function setOnHero(active){ if(active) header.classList.add('on-hero'); else header.classList.remove('on-hero'); }
-
-  if('IntersectionObserver' in window){
-    var io=new IntersectionObserver(function(entries){
-      entries.forEach(function(entry){ setOnHero(entry.isIntersecting && entry.intersectionRatio>=0.2); });
-    },{threshold:[0,0.2,1]});
-    io.observe(hero);
-  }else{
-    function update(){
-      var rect=hero.getBoundingClientRect();
-      var vh=window.innerHeight||document.documentElement.clientHeight;
-      var visible=Math.max(0,Math.min(rect.bottom,vh)-Math.max(rect.top,0));
-      var ratio=visible/Math.min(vh,rect.height||vh);
-      setOnHero(ratio>=0.2);
-    }
-    update();
-    window.addEventListener('scroll',update,{passive:true});
-    window.addEventListener('resize',update);
+  function isInGallery(){
+    return /^#galerie/.test(location.hash);
   }
+
+  function updateHeaderState(){
+    // Přepínej třídu na základě polohy a hashe
+    if(isInGallery()){
+      document.documentElement.classList.add('is-gallery');
+      header.classList.remove('on-hero');
+      return;
+    }else{
+      document.documentElement.classList.remove('is-gallery');
+    }
+
+    // Jsme mimo galerii: povol průhledný režim pouze úplně nahoře na Úvodu
+    if(window.scrollY === 0){
+      header.classList.add('on-hero');
+    }else{
+      header.classList.remove('on-hero');
+    }
+  }
+
+  // inicializace a posluchače
+  updateHeaderState();
+  window.addEventListener('scroll', updateHeaderState, {passive:true});
+  window.addEventListener('resize', updateHeaderState);
+  window.addEventListener('hashchange', updateHeaderState);
 })();
 </script>
 
