@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://viatom.cz/sitemap.xml
