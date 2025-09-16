@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Hlavní stránka -->
+  <url>
+    <loc>https://viatom.cz/</loc>
+    <lastmod>2025-09-16</lastmod>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Sekce webu (odkazy na kotvy v rámci index.html se do sitemapy nepíšou, ale můžeme přidat základní varianty) -->
+  <url>
+    <loc>https://viatom.cz/#sluzby</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://viatom.cz/#reference</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://viatom.cz/#kontakt</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Galerie (pokud je samostatná podstránka) -->
+  <url>
+    <loc>https://viatom.cz/galerie</loc>
+    <priority>0.7</priority>
+  </url>
+
+</urlset>
