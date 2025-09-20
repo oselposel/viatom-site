@@ -1,622 +1,709 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Šachové párování – Round Robin</title>
-  <meta name="description" content="Jednostránková aplikace pro malý šachový turnaj (Round Robin / Double RR). Bez knihoven, offline, localStorage, export/import JSON.">
-  <meta name="theme-color" content="#0d6efd">
-  <style>
-    :root{
-      --bg:#f7f7f8; --card:#ffffff; --muted:#6b7280; --text:#0f172a; --pri:#0d6efd; --pri-700:#0b5ed7; --ok:#16a34a; --warn:#ca8a04; --err:#dc2626;
-      --radius:12px; --shadow:0 1px 3px rgba(0,0,0,.08), 0 10px 20px rgba(0,0,0,.04);
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>VIATOM s.r.o.</title>
+<link rel="canonical" href="https://viatom.cz/"/>
+<meta name="description" content="VIATOM s.r.o. – dopravní a pozemní stavby ve Zlínském a Jihomoravském kraji."/>
+<link rel="preload" as="image" href="img/hero/silnice-1920.jpg"
+      imagesrcset="img/hero/silnice-768.jpg 768w, img/hero/silnice-1920.jpg 1920w"
+      imagesizes="100vw"/>
+<!-- Favicon (stejná složka jako logo) -->
+<link rel="icon" type="image/svg+xml" href="/img/logo/favicon.svg"/>
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"/>
+<link rel="manifest" href="/site.webmanifest"/>
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#00B0F0"/>
+<meta name="theme-color" content="#ffffff"/>
+
+<!-- Open Graph / Twitter -->
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://viatom.cz/"/>
+<meta property="og:title" content="VIATOM s.r.o. - dopravni a pozemni stavby"/>
+<meta property="og:description" content="VIATOM s.r.o. - dopravni a pozemni stavby ve Zlinskem a Jihomoravskem kraji."/>
+<meta property="og:image" content="https://viatom.cz/img/hero/silnice-1920.jpg"/>
+<meta property="og:site_name" content="VIATOM s.r.o."/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="VIATOM s.r.o. - dopravni a pozemni stavby"/>
+<meta name="twitter:description" content="VIATOM s.r.o. - dopravni a pozemni stavby ve Zlinskem a Jihomoravskem kraji."/>
+<meta name="twitter:image" content="https://viatom.cz/img/hero/silnice-1920.jpg"/>
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "VIATOM s.r.o.",
+  "legalName": "VIATOM s.r.o.",
+  "url": "https://viatom.cz/",
+  "logo": "https://viatom.cz/android-chrome-512x512.png",
+  "sameAs": [
+    "https://www.firmy.cz/neoverena-firma/112755722-viatom-uherske-hradiste.html",
+    "https://rejstrik-firem.kurzy.cz/21928878/viatom-sro/",
+    "https://rejstrik.penize.cz/ares/21928878-viatom-s-r-o"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Jablonova 487, Sady",
+    "addressLocality": "Uherske Hradiste",
+    "postalCode": "686 01",
+    "addressCountry": "CZ"
+  },
+  "taxID": "CZ21928878",
+  "contactPoint": [{
+    "@type": "ContactPoint",
+    "contactType": "customer service",
+    "telephone": "+420720958858",
+    "availableLanguage": ["cs"],
+    "areaServed": "CZ"
+  }]
+}
+</script>
+
+<!-- 0) Velmi brzký skript: pokud URL hash začíná na #galerie, označ <html> -->
+<script>
+(function(){
+  try{
+    if(/^#galerie/.test(location.hash)){
+      document.documentElement.classList.add('is-gallery');
     }
-    html,body{height:100%}
-    body{margin:0;font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
-    h1,h2,h3{margin:.25rem 0 1rem 0}
-    .wrap{max-width:1100px;margin:0 auto;padding:16px 16px 88px}
-    .tabs{display:flex;gap:8px;position:sticky;top:0;background:linear-gradient(#fff,#fff00) #fff;padding:8px 0 12px;margin:-8px -16px 12px;border-bottom:1px solid #e5e7eb;z-index:10}
-    .tab{appearance:none;border:1px solid #e5e7eb;background:#fff;border-radius:999px;padding:8px 14px;font-weight:600;cursor:pointer}
-    .tab.active{background:var(--pri);color:#fff;border-color:transparent}
-    .card{background:var(--card);border:1px solid #e5e7eb;border-radius:var(--radius);box-shadow:var(--shadow);padding:12px}
-    .grid{display:grid;gap:12px}
-    @media (min-width:768px){.grid-2{grid-template-columns:1fr 1fr}}
-    label{font-size:.9rem;color:var(--muted)}
-    input[type=text],input[type=number],select{width:100%;padding:10px 12px;border:1px solid #e5e7eb;border-radius:8px;background:#fff}
-    button{appearance:none;border:0;border-radius:8px;padding:10px 12px;font-weight:600;cursor:pointer}
-    .btn{background:#e5e7eb}
-    .btn-pri{background:var(--pri);color:#fff}
-    .btn-pri:hover{background:var(--pri-700)}
-    .btn-ghost{background:transparent;border:1px solid #e5e7eb}
-    .muted{color:var(--muted)}
-    .row{display:flex;gap:8px;align-items:center}
-    .row > *{flex:1}
-    .players-table,.pairs-table,.standings{width:100%;border-collapse:separate;border-spacing:0}
-    th,td{padding:8px 10px;border-bottom:1px solid #eee;vertical-align:middle}
-    th{background:#fafafa;text-align:left;position:sticky;top:0;z-index:1}
-    .scroll-x{overflow:auto}
-    .sticky-actions{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #e5e7eb;box-shadow:0 -4px 24px rgba(0,0,0,.06);padding:8px 12px;z-index:50}
-    .sticky-actions .bar{max-width:1100px;margin:0 auto;display:flex;gap:8px}
-    .tag{display:inline-block;background:#eef2ff;color:#3730a3;font-size:.75rem;padding:2px 8px;border-radius:999px;border:1px solid #e5e7eb}
-    .tie{background:linear-gradient(0deg, rgba(2,132,199,.06), rgba(2,132,199,.06))}
-    .tooltip{position:relative}
-    .tooltip:hover .tip{display:block}
-    .tip{display:none;position:absolute;left:0;top:100%;background:#111827;color:#fff;padding:8px;border-radius:6px;font-size:.8rem;min-width:200px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
-    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-    @media print{
-      body{background:#fff}
-      .tabs,.sticky-actions{display:none}
-      .card{box-shadow:none;border:0;padding:0}
-      .wrap{padding:0}
-      .print-section{break-inside:avoid}
-      .page-break{page-break-before:always}
-    }
-  </style>
+  }catch(e){}
+})();
+</script>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root{
+    /* výška horní lišty + safe-area pro mobily s výřezem */
+    --header-h: calc(56px + env(safe-area-inset-top, 0px));
+  }
+
+  /* ===== base scroll ===== */
+  html{scroll-behavior:smooth}
+  section[id],main[id],div[id]{scroll-margin-top:68px}
+  #galerie{scroll-margin-top:120px}
+  /* NOVÉ: ať je vidět hlavička sekce (summary) pod sticky lištou */
+  details.gallery-group{scroll-margin-top:120px}
+  details.gallery-group>summary{scroll-margin-top:120px}
+
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#000}
+  details>summary{list-style:none;cursor:pointer}
+  details>summary::-webkit-details-marker{display:none}
+
+  /* CSS přepínač galerie/domů */
+  #home{display:block}
+  #galerie{display:none}
+  #galerie:target{display:block}
+  #galerie:target~#home{display:none}
+
+  /* Galerie */
+  .gallery-img{width:100%;height:100%;object-fit:cover;display:block;border-radius:12px}
+  details.gallery-group>summary{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;border-radius:.75rem;border:1px solid rgba(0,0,0,.08);background:#fff}
+  .summary-title{font-weight:600;margin-right:auto}
+  .summary-previews{display:flex;gap:.5rem}
+  .summary-previews img{width:84px;height:56px;object-fit:cover;border-radius:.5rem;border:1px solid rgba(0,0,0,.06)}
+  .summary-dots{margin-left:.25rem;font-size:22px;opacity:.6}
+  details.gallery-group[open]>summary{border-bottom-left-radius:.5rem;border-bottom-right-radius:.5rem;border-color:rgba(0,0,0,.12)}
+
+  /* Lightbox */
+  #galerie .grid img{cursor:zoom-in}
+  #lightbox-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;z-index:9999}
+  #lightbox-overlay.open{display:flex}
+  #lightbox-overlay img{max-width:92vw;max-height:92vh;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.6)}
+  #lightbox-overlay .lb-btn{position:absolute;width:42px;height:42px;border-radius:9999px;background:rgba(0,0,0,.45);color:#fff;border:1px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;user-select:none}
+  #lightbox-overlay .lb-close{top:16px;right:16px}
+  #lightbox-overlay .lb-prev{left:16px;top:50%;transform:translateY(-50%)}
+  #lightbox-overlay .lb-next{right:16px;top:50%;transform:translateY(-50%)}
+  @media (max-width:640px){#lightbox-overlay .lb-prev,#lightbox-overlay .lb-next{width:36px;height:36px;font-size:18px}}
+
+  .ref-thumbs-link{display:block;margin-top:.5rem}
+  .ref-thumbs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem}
+  .ref-thumbs img{width:100%;height:64px;object-fit:cover;border-radius:.5rem;border:1px solid rgba(0,0,0,.06)}
+
+  /* HERO */
+  #uvod{position:relative;min-height:100vh;background:#000}
+  #uvod>.hero-media{position:absolute;inset:0;z-index:0;pointer-events:none;background:#000}
+  #uvod>.hero-media picture,#uvod>.hero-media img{width:100%;height:100%;object-fit:cover;display:block}
+  #uvod>.decor-overlay{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,.35) 55%,rgba(0,0,0,.28) 100%)}
+  #uvod>*:not(.hero-media):not(.decor-overlay){position:relative;z-index:2}
+  @media (max-width:767px){#uvod>.hero-media img{object-position:80% center}}
+
+  /* Header — FIXED */
+  header.site-header{
+    position:fixed; top:0; left:0; right:0; width:100%;
+    z-index:50;
+    border-bottom:1px solid rgba(0,0,0,.08);
+    background:rgba(255,255,255,.94);
+    backdrop-filter:blur(8px);
+    color:#111;
+    transition:background .25s ease,color .25s ease,border-color .25s ease, box-shadow .25s ease;
+  }
+  header.site-header a{color:#111}
+  header.site-header .navlink:hover{background:rgba(0,0,0,.06)}
+
+  /* Stav "na hero" (jen když jsme na vršku Úvodu) */
+  header.site-header.on-hero{
+    border-color:transparent !important;
+    background:transparent !important;
+    color:#fff !important;
+    backdrop-filter:none !important;
+    box-shadow:none !important;
+  }
+  header.site-header.on-hero a{color:#fff !important}
+  header.site-header.on-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.42),rgba(0,0,0,0));pointer-events:none}
+
+  /* HERO – panel */
+  .hero-card{
+    border-radius:1.25rem;
+    padding:1.25rem;
+    background:rgba(15,23,42,.55);
+    border:1px solid rgba(255,255,255,.08);
+    color:#e5e7eb;
+    backdrop-filter:blur(10px);
+    box-shadow:0 20px 40px rgba(0,0,0,.35);
+  }
+  .hero-card ul{display:grid;gap:.75rem}
+  @media (min-width:640px){ .hero-card ul{grid-template-columns:repeat(2,minmax(0,1fr));} }
+  .hero-chip{
+    display:flex;align-items:center;gap:.75rem;
+    border-radius:.85rem;padding:.65rem .9rem;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.08);
+    transition:background .2s ease,border-color .2s ease,transform .15s ease;
+  }
+  .hero-chip:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.16);transform:translateY(-1px)}
+  .hero-dot{width:.5rem;height:.5rem;border-radius:9999px;background:#FF5050;box-shadow:0 0 0 2px rgba(255,80,80,.22)}
+  .hero-label{font-weight:700;letter-spacing:.1px}
+
+  /* ===== Přinucení bílé hlavičky, když jsme v galerii (bez flashnutí) ===== */
+  html.is-gallery header.site-header{
+    border-color:rgba(0,0,0,.08) !important;
+    background:rgba(255,255,255,.94) !important;
+    color:#111 !important;
+    backdrop-filter:blur(8px) !important;
+    box-shadow:0 1px 0 rgba(0,0,0,.06);
+  }
+  html.is-gallery header.site-header a{color:#111 !important}
+  html.is-gallery header.site-header.on-hero::before{display:none}
+
+  /* ===== hero padding pod fixní header ===== */
+  #uvod .hero-pad{ padding-top: var(--header-h); }
+
+  /* ===== Mobilní menu: vždy čitelné ===== */
+  /* Bílé pozadí a tmavý text, i když je header v .on-hero (průhledný) */
+  #mobileMenu{
+    background: rgba(255,255,255,.98);
+    box-shadow: 0 1px 0 rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.08);
+  }
+  header.site-header.on-hero #mobileMenu{ background: rgba(255,255,255,.98); }
+  header.site-header #mobileMenu a{
+    color:#111 !important;
+  }
+  header.site-header #mobileMenu a:hover{
+    background: rgba(0,0,0,.06);
+  }
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="tabs">
-      <button class="tab active" data-tab="setup">Nastavení & Hráči</button>
-      <button class="tab" data-tab="rounds">Kola & Zápisy</button>
-      <button class="tab" data-tab="standings">Pořadí</button>
+
+<!-- NAV -->
+<header class="site-header on-hero">
+  <div class="mx-auto w-full max-w-6xl px-4 flex items-center justify-between h-14">
+    <a href="#uvod" class="inline-flex items-center" aria-label="Přejít na úvod">
+      <img src="img/logo/viatom.svg" alt="VIATOM" class="h-8 w-auto" loading="eager" decoding="async">
+    </a>
+    <nav class="hidden md:flex items-center gap-2 text-sm">
+      <a class="navlink block px-3 py-2 rounded-md" href="#uvod">Úvod</a>
+      <a class="navlink block px-3 py-2 rounded-md" href="#sluzby">Služby</a>
+      <a class="navlink block px-3 py-2 rounded-md" href="#reference">Reference</a>
+      <a class="navlink block px-3 py-2 rounded-md" href="#kontakt">Kontakt</a>
+    </nav>
+    <button id="menuBtn" aria-label="Menu" class="md:hidden p-2">
+      <div class="w-6 h-0.5 bg-current mb-1"></div>
+      <div class="w-6 h-0.5 bg-current mb-1"></div>
+      <div class="w-6 h-0.5 bg-current"></div>
+    </button>
+  </div>
+  <div id="mobileMenu" class="hidden md:hidden border-t bg-white">
+    <div class="mx-auto w-full max-w-6xl px-4 py-2">
+      <a class="block px-3 py-2 rounded-md hover:bg-gray-100" href="#uvod">Úvod</a>
+      <a class="block px-3 py-2 rounded-md hover:bg-gray-100" href="#sluzby">Služby</a>
+      <a class="block px-3 py-2 rounded-md hover:bg-gray-100" href="#reference">Reference</a>
+      <a class="block px-3 py-2 rounded-md hover:bg-gray-100" href="#kontakt">Kontakt</a>
     </div>
+  </div>
+</header>
 
-    <section id="setup" class="card grid grid-2 print-section">
-      <div class="grid">
-        <div>
-          <label for="tName">Název turnaje</label>
-          <input id="tName" type="text" placeholder="Můj turnaj">
-        </div>
-        <div>
-          <label for="tType">Typ</label>
-          <select id="tType">
-            <option value="RR">Round Robin (jednokolový)</option>
-            <option value="DRR">Double Round Robin (dvojkolový)</option>
-          </select>
-        </div>
-        <div class="row">
-          <button id="btnAddPlayer" class="btn">Přidat hráče</button>
-          <button id="btnDemo" class="btn-ghost">Nahrát demo</button>
-          <button id="btnGenerate" class="btn-pri">Vygenerovat los</button>
-        </div>
-      </div>
+<!-- Galerie jako první kvůli :target -->
+<main id="galerie" class="min-h-screen" style="background-color:#F5F5F5">
+  <header class="border-b bg-white/90 backdrop-blur shadow-sm" style="position: sticky; top: 56px; z-index: 30;">
+    <div class="mx-auto w-full max-w-6xl px-4 flex items-center justify-between h-14">
+      <div class="font-bold">Reference – galerie</div>
+      <a href="#uvod" class="px-4 py-1 rounded border" style="color:#00B0F0;border-color:#00B0F0">Zpět na hlavní stránku</a>
+    </div>
+  </header>
 
+  <section class="py-12 sm:py-16">
+    <div class="mx-auto w-full max-w-6xl px-4">
+
+      <!-- ========== NEZDENICE ========== -->
+      <details class="rounded-2xl border bg-white p-4 mb-4 gallery-group" id="galerie-nezdenice">
+        <summary class="cursor-pointer font-semibold text-gray-900">
+          <span class="summary-title">Nezdenice – chodník</span>
+          <span class="summary-previews">
+            <img src="img/reference/nezdenice/N14.jpg" alt="N14.jpg" loading="lazy"/>
+            <img src="img/reference/nezdenice/N15.jpg" alt="N15.jpg" loading="lazy"/>
+          </span>
+          <span class="summary-dots">⋯</span>
+        </summary>
+        <div class="mt-4">
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- N1..N15 -->
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/nezdenice/N1.jpg" alt="N1" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/nezdenice/N2.jpg" alt="N2" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/nezdenice/N3.jpg" alt="N3" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/nezdenice/N4.jpg" alt="N4" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/nezdenice/N5.jpg" alt="N5" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/nezdenice/N6.jpg" alt="N6" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/nezdenice/N7.jpg" alt="N7" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/nezdenice/N8.jpg" alt="N8" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/nezdenice/N9.jpg" alt="N9" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/nezdenice/N10.jpg" alt="N10" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/nezdenice/N11.jpg" alt="N11" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/nezdenice/N12.jpg" alt="N12" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/nezdenice/N13.jpg" alt="N13" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/nezdenice/N14.jpg" alt="N14" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/nezdenice/N15.jpg" alt="N15" loading="lazy" class="gallery-img"/></div></figure>
+          </div>
+        </div>
+      </details>
+
+      <!-- ========== OSVĚTIMANY ========== -->
+      <details class="rounded-2xl border bg-white p-4 mb-4 gallery-group" id="galerie-osvetimany">
+        <summary class="cursor-pointer font-semibold text-gray-900">
+          <span class="summary-title">Osvětimany – parkování</span>
+          <span class="summary-previews">
+            <img src="img/reference/osvetimany/O16.jpg" alt="O16" loading="lazy"/>
+            <img src="img/reference/osvetimany/O17.jpg" alt="O17" loading="lazy"/>
+          </span>
+          <span class="summary-dots">⋯</span>
+        </summary>
+        <div class="mt-4">
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- O1..O17 -->
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O1.jpg" alt="O1" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O2.jpg" alt="O2" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O3.jpg" alt="O3" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O4.jpg" alt="O4" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O5.jpg" alt="O5" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O6.jpg" alt="O6" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O7.jpg" alt="O7" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O8.jpg" alt="O8" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O9.jpg" alt="O9" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O10.jpg" alt="O10" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O11.jpg" alt="O11" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O12.jpg" alt="O12" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O13.jpg" alt="O13" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O14.jpg" alt="O14" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O15.jpg" alt="O15" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O16.jpg" alt="O16" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/osvetimany/O17.jpg" alt="O17" loading="lazy" class="gallery-img"/></div></figure>
+          </div>
+        </div>
+      </details>
+
+      <!-- ========== RE-USE NEZDENICE ========== -->
+      <details class="rounded-2xl border bg-white p-4 mb-4 gallery-group" id="galerie-reuse">
+        <summary class="cursor-pointer font-semibold text-gray-900">
+          <span class="summary-title">Re-Use centrum – Nezdenice</span>
+          <span class="summary-previews">
+            <img src="img/reference/reuse-nezdenice/R22.jpg" alt="R22" loading="lazy"/>
+            <img src="img/reference/reuse-nezdenice/R23.jpg" alt="R23" loading="lazy"/>
+          </span>
+          <span class="summary-dots">⋯</span>
+        </summary>
+        <div class="mt-4">
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- R1..R23 -->
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R1.jpg" alt="R1" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R2.jpg" alt="R2" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R3.jpg" alt="R3" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R4.jpg" alt="R4" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R5.jpg" alt="R5" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R6.jpg" alt="R6" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R7.jpg" alt="R7" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R8.jpg" alt="R8" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R9.jpg" alt="R9" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R10.jpg" alt="R10" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R11.jpg" alt="R11" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R12.jpg" alt="R12" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R13.jpg" alt="R13" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R14.jpg" alt="R14" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R15.jpg" alt="R15" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R16.jpg" alt="R16" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R17.jpg" alt="R17" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R18.jpg" alt="R18" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R19.jpg" alt="R19" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R20.jpg" alt="R20" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R21.jpg" alt="R21" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R22.jpg" alt="R22" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/reuse-nezdenice/R23.jpg" alt="R23" loading="lazy" class="gallery-img"/></div></figure>
+          </div>
+        </div>
+      </details>
+
+      <!-- ========== BŘEST ========== -->
+      <details class="rounded-2xl border bg-white p-4 mb-4 gallery-group" id="galerie-brest">
+        <summary class="cursor-pointer font-semibold text-gray-900">
+          <span class="summary-title">Břest – sběrná místa</span>
+          <span class="summary-previews">
+            <img src="img/reference/brest/B28.jpg" alt="B28" loading="lazy"/>
+            <img src="img/reference/brest/B29.jpg" alt="B29" loading="lazy"/>
+          </span>
+          <span class="summary-dots">⋯</span>
+        </summary>
+        <div class="mt-4">
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- B1..B29 -->
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B1.jpg" alt="B1" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B2.jpg" alt="B2" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B3.jpg" alt="B3" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B4.jpg" alt="B4" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B5.jpg" alt="B5" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B6.jpg" alt="B6" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B7.jpg" alt="B7" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B8.jpg" alt="B8" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B9.jpg" alt="B9" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B10.jpg" alt="B10" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B11.jpg" alt="B11" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B12.jpg" alt="B12" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B13.jpg" alt="B13" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B14.jpg" alt="B14" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B15.jpg" alt="B15" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B16.jpg" alt="B16" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B17.jpg" alt="B17" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B18.jpg" alt="B18" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B19.jpg" alt="B19" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B20.jpg" alt="B20" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B21.jpg" alt="B21" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B22.jpg" alt="B22" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B23.jpg" alt="B23" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B24.jpg" alt="B24" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B25.jpg" alt="B25" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B26.jpg" alt="B26" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B27.jpg" alt="B27" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B28.jpg" alt="B28" loading="lazy" class="gallery-img"/></div></figure>
+            <figure class="group border rounded-xl overflow-hidden bg-white"><div class="aspect-video bg-gray-100"><img src="img/reference/brest/B29.jpg" alt="B29" loading="lazy" class="gallery-img"/></div></figure>
+          </div>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <footer class="border-t py-8 bg-white">
+    <div class="mx-auto w-full max-w-6xl px-4 text-xs text-gray-400">© <span id="year"></span> VIATOM s.r.o.</div>
+  </footer>
+</main>
+
+<main id="home" class="min-h-screen flex flex-col bg-white">
+  <!-- HERO -->
+  <section id="uvod" class="relative overflow-hidden">
+    <div class="hero-media">
+      <picture>
+        <source type="image/webp" media="(min-width: 768px)" srcset="img/hero/silnice-1920.webp"/>
+        <source type="image/webp" srcset="img/hero/silnice-768.webp"/>
+        <img src="img/hero/silnice-1920.jpg"
+             srcset="img/hero/silnice-768.jpg 768w, img/hero/silnice-1920.jpg 1920w"
+             sizes="100vw" alt="Silnice za soumraku – VIATOM"
+             decoding="async" loading="eager"/>
+      </picture>
+    </div>
+    <div class="decor-overlay"></div>
+
+    <!-- NOVĚ přidané odsazení pod fixní header: class="hero-pad" -->
+    <div class="relative z-10 mx-auto w-full max-w-6xl px-4 grid lg:grid-cols-2 gap-8 items-center min-h-screen hero-pad">
       <div>
-        <div class="row" style="justify-content:space-between;align-items:baseline">
-          <h3>Hráči <span class="muted" id="playersCount">0/20</span></h3>
-          <span class="muted">Pořadí hráčů ovlivní los</span>
-        </div>
-        <div class="scroll-x">
-          <table class="players-table" id="playersTable" aria-label="Seznam hráčů">
-            <thead>
-              <tr><th style="width:40px">#</th><th>Jméno</th><th style="width:120px">Rating</th><th style="width:90px">Akce</th></tr>
-            </thead>
-            <tbody id="playersBody"></tbody>
-          </table>
+        <p class="text-sm font-semibold tracking-widest" style="color:#FF5050">Dopravní a pozemní stavby</p>
+        <h1 class="text-3xl sm:text-4xl font-extrabold mt-2" style="color:#00B0F0">Chystá vaše obec, firma, nebo soukromý investor <span class="whitespace-nowrap">realizaci stavby?</span></h1>
+        <p class="mt-4 leading-relaxed text-white">Jsme stavební firma z Uherského Hradiště. Realizujeme dopravní a pozemní stavby v rámci Zlínského a Jihomoravského kraje. Tým tvoří zkušení odborníci s autorizacemi pro daný obor.</p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a href="#kontakt" class="inline-flex items-center px-5 py-2 rounded-lg font-semibold text-white" style="background-color:#FF5050">Nezávazná konzultace</a>
+          <a href="#galerie" class="inline-flex items-center px-5 py-2 rounded-lg font-semibold border" style="border-color:#00B0F0;color:#00B0F0;background-color:#fff;border-color:#fff;color:#0ea5e9">Zobrazit reference</a>
         </div>
       </div>
-    </section>
 
-    <section id="rounds" class="card grid print-section" hidden>
-      <div class="row" style="justify-content:space-between;align-items:baseline">
-        <h3>Kola</h3>
-        <span class="muted" id="roundsInfo">—</span>
+      <!-- Panel v hero -->
+      <div class="hero-card">
+        <ul>
+          <li class="hero-chip"><span class="hero-dot"></span><span class="hero-label">Komunikace</span></li>
+          <li class="hero-chip"><span class="hero-dot"></span><span class="hero-label">Chodníky</span></li>
+          <li class="hero-chip"><span class="hero-dot"></span><span class="hero-label">Zpevněné plochy</span></li>
+          <li class="hero-chip"><span class="hero-dot"></span><span class="hero-label">Hřiště</span></li>
+          <li class="hero-chip"><span class="hero-dot"></span><span class="hero-label">Halové objekty</span></li>
+          <li class="hero-chip"><span class="hero-dot"></span><span class="hero-label">Pozemní stavby</span></li>
+        </ul>
       </div>
-      <div id="roundsList" class="grid"></div>
-    </section>
-
-    <section id="standings" class="card grid print-section" hidden>
-      <div class="row" style="justify-content:space-between;align-items:baseline">
-        <h3>Pořadí</h3>
-        <div class="row" style="flex:0 0 auto;gap:6px">
-          <span class="muted">Řadit podle:</span>
-          <span class="tag">Body → H2H → SB → Výhry → Los</span>
-        </div>
-      </div>
-      <div class="scroll-x">
-        <table class="standings" id="standingsTable" aria-label="Tabulka pořadí">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Hráč</th>
-              <th>Body</th>
-              <th>H2H</th>
-              <th>Sonneborn–Berger</th>
-              <th>Výhry</th>
-              <th class="muted">Buchholz</th>
-              <th class="muted">Skóre detail</th>
-            </tr>
-          </thead>
-          <tbody id="standingsBody"></tbody>
-        </table>
-      </div>
-    </section>
-  </div>
-
-  <div class="sticky-actions">
-    <div class="bar">
-      <button id="btnSave" class="btn">Uložit</button>
-      <button id="btnExport" class="btn">Export JSON</button>
-      <label class="btn" for="fileImport" style="display:inline-flex;align-items:center;gap:8px;cursor:pointer">Import JSON<input id="fileImport" class="sr-only" type="file" accept="application/json"></label>
-      <button id="btnReset" class="btn" style="margin-left:auto;color:#fff;background:var(--err)">Reset</button>
     </div>
-  </div>
+  </section>
 
-  <script type="module">
-  // ===== Util: seeded random (mulberry32) =====
-  function hashStringToU32(str){
-    let h = 2166136261 >>> 0;
-    for(let i=0;i<str.length;i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
-    return h >>> 0;
-  }
-  function mulberry32(seed){
-    let t = seed >>> 0;
-    return function(){
-      t += 0x6D2B79F5; t = t >>> 0;
-      let r = Math.imul(t ^ (t >>> 15), 1 | t);
-      r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
-      return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
-    };
-  }
+  <section id="sluzby" class="py-12 sm:py-16">
+    <div class="mx-auto w-full max-w-6xl px-4">
+      <p class="text-xs uppercase tracking-widest text-gray-500 mb-2">Služby</p>
+      <h2 class="text-2xl sm:text-3xl font-extrabold mb-6" style="color:#00B0F0">Výstavba, rekonstrukce, opravy</h2>
+      <div class="grid lg:grid-cols-2 gap-8">
+        <div>
+          <h3 class="text-lg font-bold mb-2">Kompletní dodávka</h3>
+          <p class="text-gray-700 leading-relaxed">Od zemních prací až po finální povrchy. Realizujeme související pozemní stavby, zejména halové objekty.</p>
+          <p class="text-gray-700 leading-relaxed mt-3">Máte zájem o konzultaci nebo zpracování cenové nabídky? Ozvěte se nám – připravíme řešení na míru.</p>
+        </div>
+        <div class="rounded-2xl border p-6 bg-white">
+          <dl class="grid sm:grid-cols-2 gap-x-6 gap-y-4 text-sm">
+            <div><dt class="font-semibold text-gray-900">Komunikace &amp; chodníky</dt><dd class="text-gray-600">vč. odvodnění, obrub, přechodů, mobiliáře</dd></div>
+            <div><dt class="font-semibold text-gray-900">Zpevněné plochy</dt><dd class="text-gray-600">parkoviště, nájezdy, manipulační plochy</dd></div>
+            <div><dt class="font-semibold text-gray-900">Hřiště</dt><dd class="text-gray-600">povrchy, obruby, oplocení, vybavení</dd></div>
+            <div><dt class="font-semibold text-gray-900">Halové objekty</dt><dd class="text-gray-600">základy, konstrukce, zateplení, zpevněná plocha</dd></div>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  // ===== State namespace =====
-  const State = (()=>{
-    const KEY = 'rr-chess-app-state-v1';
-    let state = {
-      tournament: { name: '', type: 'RR' },
-      players: [], // {id, name, rating}
-      rounds: [],  // [ [ {white, black, result:'- | 1-0 | 0-1 | 0.5-0.5'} ] ]
-      seed: '',
-      version: '1'
-    };
-    function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
-    function load(){ const s = localStorage.getItem(KEY); if(!s) return null; try { state = JSON.parse(s); return state; } catch{ return null; } }
-    function set(next){ state = next; save(); return state; }
-    function get(){ return state; }
-    function reset(){ state = { tournament:{name:'',type:'RR'}, players:[], rounds:[], seed:'', version:'1' }; save(); }
-    return { save, load, set, get, reset, KEY };
-  })();
-
-  // ===== Scheduler (round robin circle method) =====
-  const Scheduler = (()=>{
-    function generateSchedule(players, doubleRR=false){
-      // players: array of {id, name}
-      const ids = players.map(p=>p.id);
-      const BYE = '__BYE__';
-      let list = ids.slice();
-      if(list.length % 2 === 1){ list.push(BYE); }
-      const n = list.length; const half = n/2;
-      const rounds = [];
-      const arr = list.slice(); // rotating array
-      for(let r=0;r<n-1;r++){
-        const pairs = [];
-        for(let i=0;i<half;i++){
-          const a = arr[i]; const b = arr[n-1-i];
-          // Alternate colors per round for some variety
-          const white = (r % 2 === 0) ? a : b;
-          const black = (r % 2 === 0) ? b : a;
-          if(white!==BYE && black!==BYE) pairs.push({white, black, result:'-'});
-        }
-        rounds.push(pairs);
-        // rotate (keep first fixed)
-        const fixed = arr[0];
-        const moved = arr.pop();
-        arr.splice(1,0,moved);
-        arr[0] = fixed;
-      }
-      if(doubleRR){
-        const rev = rounds.map(r => r.map(m => ({ white:m.black, black:m.white, result:'-' })));
-        return rounds.concat(rev);
-      }
-      return rounds;
-    }
-    return { generateSchedule };
-  })();
-
-  // ===== Scoring =====
-  const Scoring = (()=>{
-    function pointsFromResult(r, forWhite){
-      if(r==='1-0') return forWhite?1:0;
-      if(r==='0-1') return forWhite?0:1;
-      if(r==='0.5-0.5') return 0.5;
-      return 0; // '-' or vs BYE → 0
-    }
-    function isPlayed(r){ return r==='1-0' || r==='0-1' || r==='0.5-0.5'; }
-
-    function collectMatches(state){
-      const matches=[]; const byPlayer = new Map();
-      for(const p of state.players){ byPlayer.set(p.id, []); }
-      (state.rounds||[]).forEach((round,ri)=>{
-        round.forEach((m,mi)=>{
-          matches.push({...m, ri, mi});
-          if(byPlayer.has(m.white)) byPlayer.get(m.white).push({...m, side:'W'});
-          if(byPlayer.has(m.black)) byPlayer.get(m.black).push({...m, side:'B'});
-        });
-      });
-      return { matches, byPlayer };
-    }
-
-    function computeStandings(state){
-      const idToPlayer = new Map(state.players.map(p=>[p.id,p]));
-      const ids = state.players.map(p=>p.id);
-      const { byPlayer } = collectMatches(state);
-      const base = new Map();
-      for(const id of ids){ base.set(id, { id, name:idToPlayer.get(id)?.name||id, points:0, wins:0, sb:0, buchholz:0, h2h:0, opponents:new Set(), oppPoints:new Map() }); }
-
-      // First pass: points, wins, opponents, and keep results
-      for(const id of ids){
-        const games = byPlayer.get(id)||[];
-        for(const g of games){
-          const opp = (g.white===id) ? g.black : g.white;
-          if(!base.has(opp)) continue; // ignore BYE
-          base.get(id).opponents.add(opp);
-          const forWhite = (g.white===id);
-          const p = pointsFromResult(g.result, forWhite);
-          base.get(id).points += p;
-          if(isPlayed(g.result)){
-            if(p===1) base.get(id).wins += 1;
-          }
-        }
-      }
-      // Compute opponent total points map (for SB/Buchholz)
-      // Need total points of each opponent; already computed in base, so after first pass we can use it.
-      for(const id of ids){
-        const games = byPlayer.get(id)||[];
-        for(const g of games){
-          const opp = (g.white===id) ? g.black : g.white;
-          if(!base.has(opp)) continue;
-          const oppPts = base.get(opp).points;
-          base.get(id).oppPoints.set(opp, oppPts);
-        }
-      }
-      // SB and Buchholz
-      for(const id of ids){
-        const games = byPlayer.get(id)||[];
-        let sb=0, buch=0;
-        for(const g of games){
-          const opp = (g.white===id) ? g.black : g.white;
-          if(!base.has(opp)) continue;
-          const oppPts = base.get(id).oppPoints.get(opp)||0;
-          if(isPlayed(g.result)){
-            const pts = pointsFromResult(g.result, g.white===id);
-            if(pts===1) sb += oppPts; else if(pts===0.5) sb += oppPts*0.5;
-          }
-          // Buchholz: sum of opponents' points (ignore BYE)
-          buch += oppPts;
-        }
-        base.get(id).sb = +sb.toFixed(2);
-        base.get(id).buchholz = +buch.toFixed(2);
-      }
-
-      // H2H values are context-dependent (ties). We'll compute later during ranking per tie group.
-      const out = ids.map(id=>({ id, name:base.get(id).name, points:+base.get(id).points.toFixed(2), wins:base.get(id).wins, sb:base.get(id).sb, buchholz:base.get(id).buchholz }));
-      return out;
-    }
-
-    function computeH2HMatrix(state){
-      const { byPlayer } = collectMatches(state);
-      const m = new Map();
-      for(const p of state.players){ m.set(p.id, new Map()); }
-      for(const p of state.players){
-        const games = byPlayer.get(p.id)||[];
-        for(const g of games){
-          const opp = (g.white===p.id) ? g.black : g.white;
-          if(!m.has(opp)) continue;
-          const forWhite = (g.white===p.id);
-          const pts = pointsFromResult(g.result, forWhite);
-          const row = m.get(p.id);
-          row.set(opp, (row.get(opp)||0) + pts);
-        }
-      }
-      return m; // m.get(A).get(B) = body A proti B
-    }
-
-    function rankPlayers(state){
-      const base = computeStandings(state);
-      const idIdx = new Map(base.map((r,i)=>[r.id,i]));
-      const h2hM = computeH2HMatrix(state);
-      const seedStr = (state.tournament?.name||'') + '|' + state.players.map(p=>p.name).sort((a,b)=>a.localeCompare(b,'cs')).join('|');
-      const rng = mulberry32(hashStringToU32(seedStr));
-      const seeded = base.map((r,i)=>({ ...r, seed:rng() }));
-
-      // Group by points
-      const groups = new Map();
-      for(const r of seeded){ const key = r.points.toFixed(2); if(!groups.has(key)) groups.set(key, []); groups.get(key).push(r); }
-
-      // For each group, compute H2H (pair or mini-table)
-      function compare(a,b, group){
-        // points desc
-        if(a.points!==b.points) return b.points - a.points;
-        // H2H
-        if(group.length===2){
-          const A = h2hM.get(a.id)?.get(b.id)||0; const B = h2hM.get(b.id)?.get(a.id)||0;
-          if(A!==B) return B - A; // higher wins → earlier
-        } else {
-          // mini-table
-          const ids = new Set(group.map(x=>x.id));
-          let aMini=0,bMini=0;
-          for(const id of ids){ if(id===a.id||id===b.id) continue; }
-          for(const opp of ids){ if(opp!==a.id) aMini += h2hM.get(a.id)?.get(opp)||0; }
-          for(const opp of ids){ if(opp!==b.id) bMini += h2hM.get(b.id)?.get(opp)||0; }
-          if(aMini!==bMini) return bMini - aMini;
-        }
-        // SB
-        if(a.sb!==b.sb) return b.sb - a.sb;
-        // Wins
-        if(a.wins!==b.wins) return b.wins - a.wins;
-        // Seeded deterministic order
-        if(a.seed!==b.seed) return a.seed < b.seed ? -1 : 1;
-        // stable by name
-        return a.name.localeCompare(b.name,'cs');
-      }
-
-      // Flatten sorted
-      const sorted=[]; const tieGroups=[];
-      const keys = Array.from(groups.keys()).map(parseFloat).sort((a,b)=>b-a);
-      for(const key of keys){
-        const group = groups.get(key.toFixed(2));
-        group.sort((a,b)=>compare(a,b, group));
-        // detect equal by all criteria except seed/name to highlight tie-group
-        // We mark ties by equal points; highlighting based on same points.
-        const startIdx = sorted.length;
-        sorted.push(...group);
-        tieGroups.push({ points:key, from:startIdx, to:sorted.length-1 });
-      }
-      // compute H2H value shown: sum vs all others in own tie-group
-      for(const tg of tieGroups){
-        const ids = sorted.slice(tg.from, tg.to+1).map(r=>r.id);
-        for(const r of sorted.slice(tg.from, tg.to+1)){
-          let v=0; for(const opp of ids){ if(opp!==r.id) v += h2hM.get(r.id)?.get(opp)||0; }
-          r.h2h = +v.toFixed(2);
-        }
-      }
-      return { rows:sorted, tieGroups };
-    }
-    return { computeStandings, rankPlayers };
-  })();
-
-  // ===== UI =====
-  const UI = (()=>{
-    const els = {
-      tabBtns: Array.from(document.querySelectorAll('.tab')),
-      sections: {
-        setup: document.getElementById('setup'),
-        rounds: document.getElementById('rounds'),
-        standings: document.getElementById('standings'),
-      },
-      tName: document.getElementById('tName'),
-      tType: document.getElementById('tType'),
-      playersBody: document.getElementById('playersBody'),
-      playersCount: document.getElementById('playersCount'),
-      btnAddPlayer: document.getElementById('btnAddPlayer'),
-      btnDemo: document.getElementById('btnDemo'),
-      btnGenerate: document.getElementById('btnGenerate'),
-      roundsList: document.getElementById('roundsList'),
-      roundsInfo: document.getElementById('roundsInfo'),
-      standingsBody: document.getElementById('standingsBody'),
-      btnSave: document.getElementById('btnSave'),
-      btnExport: document.getElementById('btnExport'),
-      fileImport: document.getElementById('fileImport'),
-      btnReset: document.getElementById('btnReset'),
-    };
-
-    // Tabs
-    els.tabBtns.forEach(b=>b.addEventListener('click',()=>{
-      els.tabBtns.forEach(x=>x.classList.remove('active'));
-      b.classList.add('active');
-      const tab = b.dataset.tab;
-      for(const k in els.sections){ els.sections[k].hidden = (k!==tab); }
-    }));
-
-    function renderPlayers(){
-      const s = State.get();
-      els.playersCount.textContent = `${s.players.length}/20`;
-      els.playersBody.innerHTML = '';
-      s.players.forEach((p,idx)=>{
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${idx+1}</td>
-          <td><input type="text" value="${p.name}" data-id="${p.id}" class="inp-name"></td>
-          <td><input type="number" value="${p.rating??''}" data-id="${p.id}" class="inp-rating" min="0" step="1"></td>
-          <td><button class="btn btn-ghost btn-del" data-id="${p.id}">Odebrat</button></td>
-        `;
-        els.playersBody.appendChild(tr);
-      });
-    }
-
-    function renderRounds(){
-      const s = State.get();
-      const rounds = s.rounds||[];
-      els.roundsInfo.textContent = rounds.length? `${rounds.length} kol, hráčů: ${s.players.length}` : 'Žádná kola';
-      els.roundsList.innerHTML = '';
-      rounds.forEach((round,ri)=>{
-        const card = document.createElement('div'); card.className='card';
-        const sumId = `r${ri}`;
-        const open = ri===0;
-        card.innerHTML = `
-          <details ${open?'open':''}>
-            <summary><strong>Kolo ${ri+1}</strong> <span class="muted">(${round.length} partií)</span></summary>
-            <div class="scroll-x" style="margin-top:8px">
-              <table class="pairs-table">
-                <thead><tr><th>Bílý</th><th>Černý</th><th>Výsledek</th></tr></thead>
-                <tbody>
-                  ${round.map((m,mi)=>{
-                    const W = s.players.find(x=>x.id===m.white)?.name||'?' ;
-                    const B = s.players.find(x=>x.id===m.black)?.name||'?';
-                    const name = `r${ri}m${mi}`;
-                    const val = m.result;
-                    const opt = (v,l)=>`<label><input type="radio" name="${name}" value="${v}" ${val===v?'checked':''}> ${l}</label>`;
-                    return `
-                      <tr>
-                        <td>${W}</td><td>${B}</td>
-                        <td class="row" style="gap:12px">
-                          ${opt('1-0','1–0')}
-                          ${opt('0-1','0–1')}
-                          ${opt('0.5-0.5','½–½')}
-                          ${opt('-','-')}
-                        </td>
-                      </tr>`;
-                  }).join('')}
-                </tbody>
-              </table>
+  <section id="reference" class="py-12 sm:py-16">
+    <div class="mx-auto w-full max-w-6xl px-4">
+      <p class="text-xs uppercase tracking-widest text-gray-500 mb-2">Ukázky realizací</p>
+      <h2 class="text-2xl sm:text-3xl font-extrabold mb-6" style="color:#00B0F0">Reference</h2>
+      <div class="grid md:grid-cols-2 gap-6 items-center">
+        <div class="rounded-2xl border bg-white p-6">
+          <h3 class="text-lg font-bold mb-2">Nezdenice – oprava chodníku</h3>
+          <p class="text-gray-700">Silnice II/495 – průběžná oprava chodníku podél komunikace.</p>
+          <a class="ref-thumbs-link" aria-label="Otevřít galerii – Nezdenice – chodník" href="#galerie-nezdenice">
+            <div class="ref-thumbs">
+              <img src="img/reference/nezdenice/N13.jpg" alt="N13" loading="lazy"/>
+              <img src="img/reference/nezdenice/N14.jpg" alt="N14" loading="lazy"/>
+              <img src="img/reference/nezdenice/N15.jpg" alt="N15" loading="lazy"/>
             </div>
-          </details>
-        `;
-        els.roundsList.appendChild(card);
-      });
-    }
+          </a>
+        </div>
+        <div class="rounded-2xl border bg-white p-6">
+          <h3 class="text-lg font-bold mb-2">Osvětimany – parkovací stání</h3>
+          <p class="text-gray-700">Nová parkovací stání u zastávky.</p>
+          <a class="ref-thumbs-link" aria-label="Otevřít galerii – Osvětimany" href="#galerie-osvetimany">
+            <div class="ref-thumbs">
+              <img src="img/reference/osvetimany/O15.jpg" alt="O15" loading="lazy"/>
+              <img src="img/reference/osvetimany/O16.jpg" alt="O16" loading="lazy"/>
+              <img src="img/reference/osvetimany/O17.jpg" alt="O17" loading="lazy"/>
+            </div>
+          </a>
+        </div>
+        <div class="rounded-2xl border bg-white p-6">
+          <h3 class="text-lg font-bold mb-2">Re-Use centrum Nezdenice</h3>
+          <p class="text-gray-700">Stavební úpravy a zpevněné plochy.</p>
+          <a class="ref-thumbs-link" aria-label="Otevřít galerii – Re-Use" href="#galerie-reuse">
+            <div class="ref-thumbs">
+              <img src="img/reference/reuse-nezdenice/R21.jpg" alt="R21" loading="lazy"/>
+              <img src="img/reference/reuse-nezdenice/R22.jpg" alt="R22" loading="lazy"/>
+              <img src="img/reference/reuse-nezdenice/R23.jpg" alt="R23" loading="lazy"/>
+            </div>
+          </a>
+        </div>
+        <div class="rounded-2xl border bg-white p-6">
+          <h3 class="text-lg font-bold mb-2">Břest – sběrná místa odpadu</h3>
+          <p class="text-gray-700">Nová sběrná stání a související úpravy.</p>
+          <a class="ref-thumbs-link" aria-label="Otevřít galerii – Břest" href="#galerie-brest">
+            <div class="ref-thumbs">
+              <img src="img/reference/brest/B27.jpg" alt="B27" loading="lazy"/>
+              <img src="img/reference/brest/B28.jpg" alt="B28" loading="lazy"/>
+              <img src="img/reference/brest/B29.jpg" alt="B29" loading="lazy"/>
+            </div>
+          </a>
+        </div>
+      </div>
 
-    function renderStandings(){
-      const s = State.get();
-      if(!s.players.length){ els.standingsBody.innerHTML=''; return; }
-      const { rows, tieGroups } = Scoring.rankPlayers(s);
-      els.standingsBody.innerHTML = '';
-      const idToRow = new Map(rows.map((r,i)=>[r.id, i+1]));
-      const positions = new Map(); rows.forEach((r,i)=>positions.set(r.id, i+1));
-      const tieRanges = new Set(); tieGroups.forEach(tg=>{ if(tg.to>tg.from) for(let i=tg.from;i<=tg.to;i++) tieRanges.add(i); });
-      rows.forEach((r,idx)=>{
-        const tr = document.createElement('tr'); if(tieRanges.has(idx)) tr.classList.add('tie');
-        const tip = `H2H v tie-skupině: ${r.h2h?.toFixed?.(2)||r.h2h}`;
-        tr.innerHTML = `
-          <td>${idx+1}</td>
-          <td>${r.name}</td>
-          <td>${r.points.toFixed(2)}</td>
-          <td class="tooltip">${(r.h2h??0).toFixed(2)}<span class="tip">${tip}</span></td>
-          <td>${r.sb.toFixed(2)}</td>
-          <td>${r.wins}</td>
-          <td class="muted">${r.buchholz.toFixed(2)}</td>
-          <td class="muted">—</td>
-        `;
-        els.standingsBody.appendChild(tr);
-      });
-    }
+      <div class="mt-6">
+        <a class="inline-flex items-center px-5 py-2 rounded-lg font-semibold text-white" href="#galerie" style="background-color:#00B0F0">Otevřít stránku s galeriemi</a>
+      </div>
+    </div>
+  </section>
 
-    // Events: players table
-    els.playersBody.addEventListener('input', (e)=>{
-      const s = State.get();
-      const t = e.target;
-      if(t.classList.contains('inp-name')){
-        const p = s.players.find(x=>x.id===t.dataset.id); if(p){ p.name = t.value; State.set(s); renderPlayers(); renderRounds(); renderStandings(); }
-      } else if(t.classList.contains('inp-rating')){
-        const p = s.players.find(x=>x.id===t.dataset.id); if(p){ const v = t.value===''?null:Number(t.value); p.rating = isNaN(v)?null:v; State.set(s); }
+  <section id="kontakt" class="py-12 sm:py-16">
+    <div class="mx-auto w-full max-w-6xl px-4">
+      <p class="text-xs uppercase tracking-widest text-gray-500 mb-2">Ozvěte se nám</p>
+      <h2 class="text-2xl sm:text-3xl font-extrabold mb-6" style="color:#00B0F0">Kontakt</h2>
+      <div class="grid lg:grid-cols-2 gap-8">
+        <div class="rounded-2xl border p-6 bg-white">
+          <address class="not-italic text-gray-800 leading-7">
+            <p class="font-semibold text-lg">VIATOM s.r.o.</p>
+            <p>Jabloňová 487, Sady, 686 01 Uherské Hradiště</p>
+            <p>IČO: 21928878  •  DIČ: CZ21928878</p>
+            <p class="mt-4 font-semibold">Ing. Tomáš Pavlík</p>
+            <p>Tel.: <a class="underline" href="tel:+420720958858">720 958 858</a></p>
+            <p>E-mail: <a class="underline" href="mailto:tomaspavlik@email.cz">tomaspavlik@email.cz</a></p>
+          </address>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<a href="#kontakt" class="fixed bottom-5 right-5 shadow-lg rounded-full px-5 py-3 font-semibold text-white" style="background-color:#FF5050">Poptat nabídku</a>
+
+<!-- ===== JS ===== -->
+<script>
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const header = document.querySelector('header.site-header');
+
+  function isInGallery(){ return /^#galerie/.test(location.hash); }
+
+  if(menuBtn){
+    menuBtn.addEventListener('click', ()=>{
+      mobileMenu.classList.toggle('hidden');
+
+      // Pokud je menu OTEVŘENÉ a jsme na vršku úvodu, zruš průhledný režim,
+      // ať jsou kontrasty (texty) vždy čitelné.
+      if(!mobileMenu.classList.contains('hidden')){
+        header.classList.remove('on-hero');
+      }else{
+        // Po zavření vrátíme průhlednost, jen pokud jsme na vršku a nejsme v galerii
+        if(window.scrollY === 0 && !isInGallery()){
+          header.classList.add('on-hero');
+        }
       }
     });
-    els.playersBody.addEventListener('click', (e)=>{
-      const btn = e.target.closest('.btn-del'); if(!btn) return;
-      const id = btn.dataset.id; const s = State.get();
-      s.players = s.players.filter(p=>p.id!==id);
-      // If schedule exists, clear it (safer after roster changes)
-      s.rounds = [];
-      State.set(s); renderPlayers(); renderRounds(); renderStandings();
-    });
+  }
 
-    els.btnAddPlayer.addEventListener('click', ()=>{
-      const s = State.get(); if(s.players.length>=20) return alert('Max 20 hráčů');
-      const id = crypto.randomUUID();
-      s.players.push({ id, name:`Hráč ${s.players.length+1}`, rating:null });
-      State.set(s); renderPlayers();
-    });
+  // Rok v patičce (ponechávám)
+  const yearEl = document.getElementById('year');
+  if(yearEl) yearEl.textContent = new Date().getFullYear();
+</script>
 
-    els.btnDemo.addEventListener('click', ()=>{
-      const names = ['Novák','Svoboda','Dvořák','Černý','Procházka','Kučera','Krejčí','Veselý'];
-      const s = State.get(); s.tournament.name = 'Demo Cup'; s.tournament.type='RR';
-      s.players = names.slice(0,8).map((n,i)=>({ id: crypto.randomUUID(), name: n, rating: 1800 + (i*20) }));
-      s.rounds = Scheduler.generateSchedule(s.players, false);
-      // Fill a few sample results
-      if(s.rounds[0]){
-        s.rounds[0][0].result='1-0';
-        s.rounds[0][1].result='0.5-0.5';
-      }
-      State.set(s); bindBasics(); renderPlayers(); renderRounds(); renderStandings();
-    });
+<!-- Lightbox -->
+<div id="lightbox-overlay" aria-hidden="true">
+  <button aria-label="Zavřít" class="lb-btn lb-close">×</button>
+  <button aria-label="Předchozí" class="lb-btn lb-prev">‹</button>
+  <img alt="Zvětšený obrázek"/>
+  <button aria-label="Další" class="lb-btn lb-next">›</button>
+</div>
+<script>
+(function(){
+  var overlay=document.getElementById('lightbox-overlay'); if(!overlay) return;
+  var imgEl=overlay.querySelector('img');
+  var btnClose=overlay.querySelector('.lb-close');
+  var btnPrev=overlay.querySelector('.lb-prev');
+  var btnNext=overlay.querySelector('.lb-next');
+  var currentGroup=[],currentIndex=-1;
 
-    els.btnGenerate.addEventListener('click', ()=>{
-      const s = State.get();
-      if(s.players.length<2) return alert('Přidejte alespoň 2 hráče');
-      const doubleRR = (els.tType.value==='DRR');
-      s.rounds = Scheduler.generateSchedule(s.players, doubleRR);
-      State.set(s); renderRounds(); renderStandings();
-      els.tabBtns.find(b=>b.dataset.tab==='rounds').click();
-    });
+  function openWith(group,index){
+    if(!group||!group.length) return;
+    currentGroup=group; currentIndex=index;
+    imgEl.src=group[index].src;
+    overlay.classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  function close(){overlay.classList.remove('open');document.body.style.overflow='';imgEl.removeAttribute('src');currentGroup=[];currentIndex=-1;}
+  function show(delta){if(!currentGroup.length) return; currentIndex=(currentIndex+delta+currentGroup.length)%currentGroup.length; imgEl.src=currentGroup[currentIndex].src;}
 
-    // Results change
-    els.roundsList.addEventListener('change', (e)=>{
-      const t = e.target; if(t.name && t.type==='radio'){
-        const m = t.name.match(/^r(\d+)m(\d+)$/); if(!m) return; const ri=+m[1], mi=+m[2];
-        const s = State.get(); s.rounds[ri][mi].result = t.value; State.set(s); renderStandings();
-      }
-    });
+  var gal=document.getElementById('galerie');
+  if(gal){
+    gal.addEventListener('click',function(e){
+      var img=e.target.closest('img'); if(!img) return;
+      if(img.closest('summary')) return;
+      var det=img.closest('details'); if(!det) return;
+      var group=Array.prototype.filter.call(det.querySelectorAll('img'),function(el){return !el.closest('summary')});
+      var index=group.indexOf(img); if(index<0) index=0;
+      openWith(group,index); e.preventDefault();
+    },true);
+  }
+  btnClose.addEventListener('click',close);
+  btnPrev.addEventListener('click',function(){show(-1)});
+  btnNext.addEventListener('click',function(){show(1)});
+  overlay.addEventListener('click',function(e){if(e.target===overlay) close();});
+  document.addEventListener('keydown',function(e){if(!overlay.classList.contains('open')) return; if(e.key==='Escape') close(); if(e.key==='ArrowLeft') show(-1); if(e.key==='ArrowRight') show(1);});
+})();
+</script>
 
-    // Save / Export / Import / Reset
-    els.btnSave.addEventListener('click', ()=>{ State.save(); alert('Uloženo do tohoto zařízení.'); });
-    els.btnExport.addEventListener('click', ()=>{
-      const blob = new Blob([JSON.stringify(State.get(), null, 2)], {type:'application/json'});
-      const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: 'chess-pairings.json' });
-      document.body.appendChild(a); a.click(); a.remove();
-    });
-    els.fileImport.addEventListener('change', async (e)=>{
-      const file = e.target.files?.[0]; if(!file) return;
-      try{
-        const txt = await file.text(); const data = JSON.parse(txt);
-        // Basic shape guard
-        if(!data || !Array.isArray(data.players)) throw new Error('Neplatný soubor');
-        State.set(data); bindBasics(); renderPlayers(); renderRounds(); renderStandings();
-      }catch(err){ alert('Import selhal: '+(err.message||err)); }
-      finally { e.target.value=''; }
-    });
-    els.btnReset.addEventListener('click', ()=>{
-      if(confirm('Opravdu vymazat všechna data?')){ State.reset(); bindBasics(); renderPlayers(); renderRounds(); renderStandings(); }
-    });
+<!-- Galerie: klik z karet -> přepnout na #galerie a OTEVŘÍT SEKCI + scroll na SUMMARY -->
+<script>
+(function(){
+  function slugToId(slug){
+    slug=(slug||'').toLowerCase();
+    // FIX: reuse musí být vyhodnocen dřív než nezdenice
+    if(slug.includes('reuse')) return 'reuse';
+    if(slug.includes('osvetimany')) return 'osvetimany';
+    if(slug.includes('brest')) return 'brest';
+    if(slug.includes('nezdenice')) return 'nezdenice';
+    return '';
+  }
 
-    function bindBasics(){
-      const s = State.get();
-      els.tName.value = s.tournament?.name||'';
-      els.tType.value = s.tournament?.type||'RR';
+  function openBySlug(slug){
+    var id=slugToId(slug); if(!id) return;
+    var det=document.getElementById('galerie-'+id); if(!det) return;
+    det.setAttribute('open','');
+    var sum=det.querySelector('summary')||det;
+    setTimeout(function(){
+      sum.scrollIntoView({behavior:'smooth', block:'start'});
+    }, 60);
+  }
+
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('#reference a.ref-thumbs-link'); if(!a) return;
+
+    var firstImg=a.querySelector('img'); var slug='';
+    if(firstImg&&firstImg.getAttribute('src')){
+      var m=firstImg.getAttribute('src').match(/reference\/([^\/]+)\//i);
+      if(m) slug=m[1];
     }
-    els.tName.addEventListener('input', ()=>{ const s=State.get(); s.tournament.name = els.tName.value; State.set(s); });
-    els.tType.addEventListener('change', ()=>{ const s=State.get(); s.tournament.type = els.tType.value; State.set(s); });
-
-    // init
-    (function init(){
-      State.load(); bindBasics(); renderPlayers(); renderRounds(); renderStandings();
-    })();
-
-    return { renderPlayers, renderRounds, renderStandings };
-  })();
-
-  // ===== PWA (single-file) =====
-  (function setupPWA(){
-    // Create manifest at runtime (single-file build)
-    const manifest = {
-      name: 'Šachové párování', short_name: 'Šachy RR', start_url: '.', scope: '.',
-      display: 'standalone', background_color:'#ffffff', theme_color:'#0d6efd',
-      icons: [
-        { src:'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><rect width=%22128%22 height=%22128%22 rx=%2226%22 fill=%22%230d6efd%22/><text x=%2264%22 y=%2282%22 font-size=%2284%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22Segoe UI,Arial%22>♟</text></svg>', sizes:'128x128', type:'image/svg+xml', purpose:'any maskable' }
-      ]
-    };
-    const blob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
-    const link = document.createElement('link'); link.rel='manifest'; link.href = URL.createObjectURL(blob);
-    document.head.appendChild(link);
-
-    // Service worker: best-effort registration.
-    // Note: Browsers generally disallow blob/data URLs for SW. We attempt to self-register by creating a
-    // temporary object URL and fall back silently if not supported.
-    const swCode = `
-      const CACHE='rr-chess-cache-v1';
-      self.addEventListener('install', e=>{ e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./']))); self.skipWaiting(); });
-      self.addEventListener('activate', e=>{ e.waitUntil(self.clients.claim()); });
-      self.addEventListener('fetch', e=>{ e.respondWith(caches.match(e.request).then(r=> r || fetch(e.request).then(resp=>resp))); });
-    `;
-    if('serviceWorker' in navigator && location.protocol.startsWith('http')){
-      try{
-        const swBlob = new Blob([swCode], {type:'text/javascript'});
-        // Some browsers reject blob: for SW; try to infer a path-relative URL fallback name using a data URL trick
-        const swUrl = URL.createObjectURL(swBlob);
-        navigator.serviceWorker.register(swUrl).catch(()=>{/* ignore */});
-      }catch(err){ /* ignore */ }
+    if(!slug){
+      var card=a.closest('.rounded-2xl'); var h=card?card.querySelector('h2,h3'):null;
+      if(h) slug=h.textContent;
     }
-  })();
-  </script>
+
+    location.hash='galerie';
+    setTimeout(function(){ openBySlug(slug); }, 60);
+
+    e.preventDefault();
+  },true);
+})();
+</script>
+
+<!-- Smart header: průhledný jen na hero Úvodu; v galerii vždy bílý -->
+<script>
+(function(){
+  var header=document.querySelector('header.site-header');
+  if(!header) return;
+
+  function isInGallery(){
+    return /^#galerie/.test(location.hash);
+  }
+
+  function updateHeaderState(){
+    // Přepínej třídu na základě polohy a hashe
+    if(isInGallery()){
+      document.documentElement.classList.add('is-gallery');
+      header.classList.remove('on-hero');
+      return;
+    }else{
+      document.documentElement.classList.remove('is-gallery');
+    }
+
+    // Jsme mimo galerii: povol průhledný režim pouze úplně nahoře na Úvodu
+    if(window.scrollY === 0){
+      header.classList.add('on-hero');
+    }else{
+      header.classList.remove('on-hero');
+    }
+  }
+
+  // inicializace a posluchače
+  updateHeaderState();
+  window.addEventListener('scroll', updateHeaderState, {passive:true});
+  window.addEventListener('resize', updateHeaderState);
+  window.addEventListener('hashchange', updateHeaderState);
+})();
+</script>
+
 </body>
 </html>
-
